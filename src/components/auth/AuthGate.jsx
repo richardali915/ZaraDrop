@@ -5,22 +5,22 @@
 // - Stores: sign in → enter Store ID + passcode → face scan (admin only)
 
 import React, { useState, useEffect } from 'react';
-import { C, G, GZ, CSS, DEMO } from '../constants';
-import { gl } from '../utils';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../hooks/useAuth';
-import { RC } from '../data';
-import { Back, FI, Btn } from './Micro';
+import { ArrowRight, Globe, LogIn, ShieldCheck, Store, Truck, Users } from 'lucide-react';
+import { C, G, GZ, CSS, DEMO } from '../../constants';
+import { gl } from '../../utils';
+import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../hooks/useAuth';
+import { RC } from '../../data';
+import { Back, FI, Btn } from '../shared/Micro';
 import FaceScan from './FaceScan';
 import IDRequestModal from './IDRequestModal';
 
 // ── Provider button ───────────────────────────────────────────
-function OAuthBtn({ provider, label, icon, primary, onClick, loading }) {
+function OAuthBtn({ provider, label, icon: Icon, primary, onClick, loading }) {
   const [hov, setHov] = useState(false);
-  const isGoogle   = provider === 'google';
-  const isFacebook = provider === 'facebook';
+  const color = provider === 'google' ? '#4285F4' : provider === 'facebook' ? '#4267B2' : '#1DA1F2';
   const bg = primary
-    ? (hov ? 'rgba(255,255,255,.13)' : 'rgba(255,255,255,.09)')
+    ? (hov ? 'rgba(255,255,255,.14)' : 'rgba(255,255,255,.08)')
     : (hov ? 'rgba(255,255,255,.07)' : 'rgba(255,255,255,.04)');
 
   return (
@@ -30,19 +30,22 @@ function OAuthBtn({ provider, label, icon, primary, onClick, loading }) {
       onMouseLeave={() => setHov(false)}
       onClick={onClick}
       style={{
-        width:'100%', padding: primary ? '13px 16px' : '11px 16px',
-        borderRadius:13, background:bg,
-        border:`1px solid ${primary ? 'rgba(255,255,255,.2)' : 'rgba(255,255,255,.1)'}`,
+        width:'100%', padding: primary ? '14px 18px' : '12px 18px',
+        borderRadius:16, background:bg,
+        border:`1px solid ${primary ? 'rgba(255,255,255,.22)' : 'rgba(255,255,255,.12)'}`,
         cursor:loading ? 'not-allowed' : 'pointer', fontFamily:'inherit',
-        display:'flex', alignItems:'center', justifyContent:'center', gap:10,
-        transition:'all .16s', marginBottom:9,
-        boxShadow: primary && hov ? '0 6px 24px rgba(0,0,0,.4)' : 'none',
-        opacity: loading ? .6 : 1,
+        display:'flex', alignItems:'center', justifyContent:'center', gap:14,
+        transition:'all .18s', marginBottom:12,
+        boxShadow: primary && hov ? '0 20px 36px rgba(0,0,0,.2)' : 'none',
+        opacity: loading ? .7 : 1,
       }}>
-      <span style={{ fontSize:20, lineHeight:1, flexShrink:0 }}>{icon}</span>
-      <span style={{ fontSize:13, fontWeight: primary ? 700 : 600, color: primary ? '#fff' : 'rgba(255,255,255,.7)' }}>
+      <span style={{ width:30, height:30, display:'inline-flex', alignItems:'center', justifyContent:'center', borderRadius:12, background:'rgba(255,255,255,.08)', color, flexShrink:0 }}>
+        <Icon size={18} />
+      </span>
+      <span style={{ fontSize:14, fontWeight: primary ? 700 : 600, color: primary ? '#fff' : 'rgba(255,255,255,.82)' }}>
         {loading ? 'Redirecting…' : label}
       </span>
+      {primary && <ArrowRight size={16} style={{ marginLeft:4, opacity: loading ? .4 : 1 }} />}
     </button>
   );
 }
@@ -79,49 +82,58 @@ function SocialSignIn({ rc, role, onBack, onSignedIn }) {
 
   return (
     <Wrap rc={rc} onBack={onBack}>
-      <div style={{ textAlign:'center', marginBottom:22 }}>
-        <div style={{ width:52, height:52, borderRadius:16, background:`${roleColor}18`, border:`1px solid ${roleColor}28`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:26, margin:'0 auto 12px' }}>{rc.icon}</div>
-        <div style={{ fontWeight:900, fontSize:18, color:'#fff', marginBottom:5 }}>
-          {role === 'customer' ? 'Sign in to order' : role === 'rider' ? 'Rider sign-in' : 'Store sign-in'}
-        </div>
-        <div style={{ fontSize:12, color:'rgba(255,255,255,.4)', lineHeight:1.6 }}>
-          {role === 'customer'
-            ? 'Use your social account — takes 10 seconds'
-            : role === 'rider'
-            ? 'Sign in, then link your Rider ID'
-            : 'Sign in, then verify your Store ID'}
+      <div style={{ paddingBottom:22, marginBottom:22, borderBottom:'1px solid rgba(255,255,255,.08)' }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, flexWrap:'wrap' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:12, minWidth:0 }}>
+            <div style={{ width:52, height:52, borderRadius:18, background:`${roleColor}18`, border:`1px solid ${roleColor}28`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:28, color:roleColor, flexShrink:0 }}>
+              {rc.icon}
+            </div>
+            <div style={{ minWidth:0 }}>
+              <div style={{ fontWeight:900, fontSize:20, color:'#fff', marginBottom:4, lineHeight:1.1 }}>
+                {role === 'customer' ? 'Order fast, sign in faster' : role === 'rider' ? 'Rider sign-in' : 'Store sign-in'}
+              </div>
+              <div style={{ fontSize:13, color:'rgba(255,255,255,.6)', lineHeight:1.6 }}>
+                {role === 'customer'
+                  ? 'Use one tap social login to access ZaraDrop.'
+                  : role === 'rider'
+                  ? 'Authenticate, then connect your Rider ID to accept deliveries.'
+                  : 'Authenticate, then verify your Store access with ID + passcode.'}
+              </div>
+            </div>
+          </div>
+          <div style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'10px 14px', borderRadius:14, background:'rgba(255,255,255,.04)', border:'1px solid rgba(255,255,255,.08)', color:'rgba(255,255,255,.7)', fontSize:12 }}>
+            <ShieldCheck size={16} />
+            Secure login
+          </div>
         </div>
       </div>
 
-      {err && <div style={{ color:'#EF4444', fontSize:12, marginBottom:10, textAlign:'center', fontWeight:600 }}>{err}</div>}
+      {err && <div style={{ color:'#EF4444', fontSize:13, marginBottom:14, textAlign:'center', fontWeight:700 }}>{err}</div>}
 
-      {/* Google — primary CTA */}
       <OAuthBtn
         provider="google" primary
         label="Continue with Google"
-        icon="🇬"
+        icon={Globe}
         loading={loading === 'google'}
         onClick={() => handleOAuth('google')}
       />
-      {/* Facebook */}
       <OAuthBtn
         provider="facebook"
         label="Continue with Facebook"
-        icon="📘"
+        icon={Users}
         loading={loading === 'facebook'}
         onClick={() => handleOAuth('facebook')}
       />
-      {/* X / Twitter */}
       <OAuthBtn
         provider="twitter"
         label="Continue with X"
-        icon="✖"
+        icon={LogIn}
         loading={loading === 'twitter'}
         onClick={() => handleOAuth('twitter')}
       />
 
-      <div style={{ textAlign:'center', marginTop:8, fontSize:10, color:'rgba(255,255,255,.2)', lineHeight:1.8 }}>
-        Your delivery info stays private.<br />No passwords stored.
+      <div style={{ textAlign:'center', marginTop:12, fontSize:11, color:'rgba(255,255,255,.45)', lineHeight:1.8 }}>
+        Your delivery info stays private. No passwords are stored.
       </div>
     </Wrap>
   );
@@ -136,11 +148,13 @@ function RiderIDStep({ rc, user, onSuccess, onBack }) {
 
   return (
     <Wrap rc={rc} onBack={onBack}>
-      <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:20 }}>
-        <div style={{ width:40, height:40, borderRadius:12, background:`${rc.color}18`, border:`1px solid ${rc.color}28`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>🏍️</div>
+      <div style={{ display:'flex', alignItems:'center', gap:14, marginBottom:20 }}>
+        <div style={{ width:44, height:44, borderRadius:14, background:`${rc.color}18`, border:`1px solid ${rc.color}28`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>
+          <Truck size={20} color={rc.color} />
+        </div>
         <div>
-          <div style={{ fontWeight:800, fontSize:15, color:'#fff' }}>Link your Rider ID</div>
-          <div style={{ fontSize:11, color:'rgba(255,255,255,.4)', marginTop:1 }}>Signed in as {user?.email || user?.user_metadata?.full_name || 'you'}</div>
+          <div style={{ fontWeight:800, fontSize:16, color:'#fff' }}>Link your Rider ID</div>
+          <div style={{ fontSize:12, color:'rgba(255,255,255,.55)', marginTop:2 }}>Signed in as {user?.email || user?.user_metadata?.full_name || 'you'}</div>
         </div>
       </div>
 
@@ -178,11 +192,13 @@ function StoreIDStep({ rc, user, onSuccess, onBack }) {
 
   return (
     <Wrap rc={rc} onBack={onBack}>
-      <div style={{ display:'flex', alignItems:'center', gap:12, marginBottom:20 }}>
-        <div style={{ width:40, height:40, borderRadius:12, background:`${rc.color}18`, border:`1px solid ${rc.color}28`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>🏪</div>
+      <div style={{ display:'flex', alignItems:'center', gap:14, marginBottom:20 }}>
+        <div style={{ width:44, height:44, borderRadius:14, background:`${rc.color}18`, border:`1px solid ${rc.color}28`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, flexShrink:0 }}>
+          <Store size={20} color={rc.color} />
+        </div>
         <div>
-          <div style={{ fontWeight:800, fontSize:15, color:'#fff' }}>Verify your Store</div>
-          <div style={{ fontSize:11, color:'rgba(255,255,255,.4)', marginTop:1 }}>Signed in as {user?.email || user?.user_metadata?.full_name || 'you'}</div>
+          <div style={{ fontWeight:800, fontSize:16, color:'#fff' }}>Verify your Store</div>
+          <div style={{ fontSize:12, color:'rgba(255,255,255,.55)', marginTop:2 }}>Signed in as {user?.email || user?.user_metadata?.full_name || 'you'}</div>
         </div>
       </div>
 
@@ -276,10 +292,10 @@ export default function AuthGate({ role, onSuccess, onBack }) {
 // ── Shared wrapper ────────────────────────────────────────────
 function Wrap({ rc, onBack, children }) {
   return (
-    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.96)', backdropFilter:'blur(28px)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000, padding:20 }}>
+    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.92)', backdropFilter:'blur(22px)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000, padding:20 }}>
       <style>{CSS}</style>
-      <div style={{ background:'rgba(14,14,28,.98)', border:'1px solid rgba(255,255,255,.1)', borderRadius:24, padding:'26px 22px', width:'100%', maxWidth:380, maxHeight:'94vh', overflowY:'auto', boxShadow:'0 32px 80px rgba(0,0,0,.7)' }}>
-        <button onClick={onBack} style={{ display:'flex', alignItems:'center', gap:6, background:'none', border:'none', cursor:'pointer', color:'rgba(255,255,255,.4)', fontSize:12, fontFamily:'inherit', padding:'0 0 18px', transition:'color .15s' }}
+      <div style={{ background:'rgba(10,10,24,.98)', border:'1px solid rgba(255,255,255,.08)', borderRadius:28, padding:'28px 26px', width:'100%', maxWidth:460, maxHeight:'94vh', overflowY:'auto', boxShadow:'0 32px 90px rgba(0,0,0,.65)' }}>
+        <button onClick={onBack} style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(255,255,255,.03)', border:'1px solid rgba(255,255,255,.08)', borderRadius:14, color:'rgba(255,255,255,.72)', fontSize:13, fontFamily:'inherit', padding:'10px 14px', cursor:'pointer', transition:'all .16s', marginBottom:18 }}
           onMouseEnter={e => e.currentTarget.style.color='rgba(255,255,255,.75)'}
           onMouseLeave={e => e.currentTarget.style.color='rgba(255,255,255,.4)'}>
           ← Back

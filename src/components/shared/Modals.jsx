@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { X, CheckCircle, Zap, DollarSign, Search } from "lucide-react";
-import { C, CSS } from "../constants";
-import { gl, fmt } from "../utils";
-import { KNOWN_RIDERS } from "../data";
+import { C, CSS } from "../../constants";
+import { gl, fmt } from "../../utils";
+import { KNOWN_RIDERS } from "../../data";
 import { Back, FI, Btn, Pill } from "./Micro";
 
 // ─── CONFETTI BURST ───

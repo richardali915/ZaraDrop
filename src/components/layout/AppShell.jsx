@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MessageCircle, Bell, CheckCircle, X, Send, Camera, ArrowLeft } from "lucide-react";
-import { C, G, GZ, CSS } from "../constants";
-import { RC } from "../data";
-import { ts } from "../utils";
+import { C, G, GZ, CSS } from "../../constants";
+import { RC } from "../../data";
+import { ts } from "../../utils";
 
 // ─── CHAT PANEL ───────────────────────────────────────────────
 export function ChatPanel({ chat, userId, onClose, isMobile, jumpTo, setJumpTo }) {

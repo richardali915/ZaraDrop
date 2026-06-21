@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Star, Clock, MapPin, Search, Plus, Minus, MessageCircle, ArrowLeft, Package } from "lucide-react";
-import { C, G } from "../constants";
-import { gl, fmt } from "../utils";
-import { useStores }   from "../hooks/useStores";
-import { useOrders }   from "../hooks/useOrders";
-import { callFn }      from "../lib/supabase";
-import { Pill, SH, Btn, Tog } from "./Micro";
-import WalletScreen    from "./WalletScreen";
-import { ProfileSetup, ProfileCard } from "./Profile";
-import PINModal        from "./PINModal";
-import { RequestRiderModal } from "./Modals";
+import { C, G } from "../../constants";
+import { gl, fmt } from "../../utils";
+import { useStores }   from "../../hooks/useStores";
+import { useOrders }   from "../../hooks/useOrders";
+import { callFn }      from "../../lib/supabase";
+import { Pill, SH, Btn, Tog } from "../shared/Micro";
+import WalletScreen    from "../shared/WalletScreen";
+import { ProfileSetup, ProfileCard } from "../shared/Profile";
+import PINModal        from "../shared/PINModal";
+import { RequestRiderModal } from "../shared/Modals";
 
 const CATS_FOOD  = ["All","Fast Food","Pizza","Local","Chinese","Japanese","Drinks","Italian"];
 const CATS_PHARM = ["All","Prescription","OTC","Vitamins","Baby Care","Personal Care"];

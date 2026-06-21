@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { X, ArrowLeft, Camera, Send, Bell, MessageCircle } from "lucide-react";
-import { C, G, CSS } from "../constants";
-import { ts } from "../utils";
-import { AUTO } from "../data";
+import { C, G, CSS } from "../../constants";
+import { ts } from "../../utils";
+import { AUTO } from "../../data";
 import { Back } from "./Micro";
 
 // ─── CHAT PANEL ───

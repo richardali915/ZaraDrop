@@ -1,14 +1,15 @@
 // src/components/RoleSelector.jsx
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, Zap, Package, TrendingUp, Shield, Clock } from 'lucide-react';
-import { C, GZ, CSS } from '../constants';
+import { useLandingStats } from '../../hooks/useLandingStats';
+import { C, GZ, CSS } from '../../constants';
 import IDRequestModal from './IDRequestModal';
 
 const STATS = [
-  { icon: Package,     value: '12,400+', label: 'Orders delivered'    },
-  { icon: TrendingUp,  value: '₦3.2M',   label: 'Paid to riders'      },
-  { icon: Shield,      value: '20',       label: 'Partner stores'      },
-  { icon: Clock,       value: '28 min',   label: 'Average delivery'    },
+  { icon: Package,    key: 'ordersDelivered', label: 'Orders delivered' },
+  { icon: TrendingUp, key: 'paidToRiders',   label: 'Paid to riders'   },
+  { icon: Shield,     key: 'partnerStores',  label: 'Partner stores'   },
+  { icon: Clock,      key: 'activeRiders',   label: 'Active riders'    },
 ];
 
 const PERKS = [
@@ -54,6 +55,7 @@ const ROLES = [
 
 // ── Left panel ────────────────────────────────────────────────
 function LeftPanel({ isMobile }) {
+  const { stats, loading } = useLandingStats();
   const [tick, setTick] = useState(0);
   useEffect(() => {
     const t = setInterval(() => setTick(p => (p + 1) % PERKS.length), 3200);
@@ -97,13 +99,15 @@ function LeftPanel({ isMobile }) {
 
       {/* Stats grid */}
       <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginBottom: isMobile ? 20 : 40, position:'relative', zIndex:1, maxWidth: isMobile ? '100%' : 420 }}>
-        {STATS.map(({ icon: Icon, value, label }) => (
-          <div key={label} style={{ background:'rgba(255,255,255,.04)', border:'1px solid rgba(255,255,255,.08)', borderRadius:14, padding:'14px 16px' }}>
+        {STATS.map(({ icon: Icon, key, label }) => (
+          <div key={key} style={{ background:'rgba(255,255,255,.04)', border:'1px solid rgba(255,255,255,.08)', borderRadius:14, padding:'14px 16px' }}>
             <div style={{ display:'flex', alignItems:'center', gap:7, marginBottom:5 }}>
               <Icon size={13} color='rgba(255,107,53,.7)' />
               <span style={{ fontSize:9, color:'rgba(255,255,255,.3)', fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>{label}</span>
             </div>
-            <div style={{ fontSize:22, fontWeight:900, color:'#fff', letterSpacing:-0.5 }}>{value}</div>
+            <div style={{ fontSize:22, fontWeight:900, color:'#fff', letterSpacing:-0.5 }}>
+              {loading ? '…' : key === 'paidToRiders' ? `₦${Number(stats[key] ?? 0).toLocaleString()}` : `${stats[key] ?? 0}`}
+            </div>
           </div>
         ))}
       </div>
@@ -132,8 +136,8 @@ function RightPanel({ onSelect, isMobile }) {
     <div style={{
       flex: isMobile ? 'none' : '0 0 480px',
       minHeight: isMobile ? 'auto' : '100vh',
-      background: isMobile ? 'transparent' : 'rgba(255,255,255,.018)',
-      backdropFilter: isMobile ? 'none' : 'blur(2px)',
+      background: isMobile ? 'transparent' : 'rgba(255,255,255,.05)',
+      backdropFilter: isMobile ? 'none' : 'blur(12px)',
       borderLeft: isMobile ? 'none' : '1px solid rgba(255,255,255,.06)',
       display:'flex', flexDirection:'column',
       justifyContent:'center', padding: isMobile ? '0 24px 40px' : '60px 44px',
@@ -227,6 +231,7 @@ export default function RoleSelector({ onSelect }) {
       display:'flex', flexDirection: isMobile ? 'column' : 'row',
       fontFamily:"-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif",
       overflow: isMobile ? 'auto' : 'hidden',
+      position: 'relative',
     }}>
       <style>{CSS}</style>
       <LeftPanel  isMobile={isMobile} />

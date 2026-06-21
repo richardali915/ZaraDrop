@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
-import { C, CSS } from '../constants';
+import { C, CSS } from '../../constants';
 
 const TYPE_COLORS = {
   new_order:      C.wa,

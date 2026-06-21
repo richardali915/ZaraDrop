@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { C, GZ, CSS } from "../constants";
-import { gl, genRiderID, genStoreID } from "../utils";
-import { Back, FI, Btn } from "./Micro";
+import { C, GZ, CSS } from "../../constants";
+import { gl, genRiderID, genStoreID } from "../../utils";
+import { Back, FI, Btn } from "../shared/Micro";
 
 export default function IDRequestModal({ type, onClose }) {
   const [step, sStep] = useState("form");
@@ -24,14 +24,14 @@ export default function IDRequestModal({ type, onClose }) {
 
   return (
     <div style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,.92)",
-      backdropFilter: "blur(20px)", display: "flex", alignItems: "center",
-      justifyContent: "center", zIndex: 5000, padding: 20,
+      position: "fixed", inset: 0, background: "rgba(0,0,0,.62)",
+      backdropFilter: "blur(18px)", display: "flex", alignItems: "center",
+      justifyContent: "center", zIndex: 5000, padding: 18,
     }}>
       <style>{CSS}</style>
       <div style={{
-        ...gl(), borderRadius: 24, padding: "22px 20px",
-        width: "100%", maxWidth: 380, maxHeight: "90vh",
+        ...gl(), borderRadius: 28, padding: "24px 22px",
+        width: "100%", maxWidth: 500, maxHeight: "88vh",
         overflowY: "auto", animation: "fadeIn .2s ease",
       }}>
         {step === "form" ? (

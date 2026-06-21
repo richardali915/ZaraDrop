@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Camera } from "lucide-react";
-import { C, CSS } from "../constants";
-import { Btn } from "./Micro";
+import { C, CSS } from "../../constants";
+import { Btn } from "../shared/Micro";
 
 export default function FaceScan({ color, onDone }) {
   const [st, sSt] = useState("idle");

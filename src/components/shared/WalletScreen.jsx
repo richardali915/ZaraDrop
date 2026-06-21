@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, Plus, Copy, ChevronRight } from "lucide-react";
-import { C } from "../constants";
-import { gl } from "../utils";
+import { C } from "../../constants";
+import { gl } from "../../utils";
 import { Back, Btn, MiniChart } from "./Micro";
 
 export default function WalletScreen({ wallet: wHook, role }) {

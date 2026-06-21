@@ -70,6 +70,7 @@ export function useNotifications(userId) {
   useEffect(() => {
     if (!userId) return;
 
+    const refreshTimer = setInterval(() => fetch(), 30_000);
     const ch = supabase.channel(`notifs_rt_${userId}`)
       .on('postgres_changes', {
         event: 'INSERT', schema: 'public', table: 'notifications',
@@ -85,6 +86,7 @@ export function useNotifications(userId) {
         showLocalNotification(notif);
 
         // 3. Queue in-app toast with smart overflow
+
         _queueToast({
           id:    `toast_${notif.id || Date.now()}`,
           title: notif.title,
@@ -96,7 +98,10 @@ export function useNotifications(userId) {
       })
       .subscribe();
 
-    return () => supabase.removeChannel(ch);
+    return () => {
+      clearInterval(refreshTimer);
+      supabase.removeChannel(ch);
+    };
   }, [userId]);
 
   // ── Toast queue management ─────────────────────────────────

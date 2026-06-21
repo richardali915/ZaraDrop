@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Package, TrendingUp, Activity, MessageCircle, Star } from "lucide-react";
-import { C } from "../constants";
-import { gl } from "../utils";
-import { useOrders } from "../hooks/useOrders";
-import { SH, SC, Tog, Pill, Btn, MiniChart } from "./Micro";
-import WalletScreen from "./WalletScreen";
-import { ProfileSetup, ProfileCard } from "./Profile";
+import { C } from "../../constants";
+import { gl } from "../../utils";
+import { useOrders } from "../../hooks/useOrders";
+import { SH, SC, Tog, Pill, Btn, MiniChart } from "../shared/Micro";
+import WalletScreen from "../shared/WalletScreen";
+import { ProfileSetup, ProfileCard } from "../shared/Profile";
 
 export default function StoreApp({ tab, isMobile, user, profile, wallet, openChat, storeHook, currentAttendant, isStoreAdmin }) {
   const [range,      setRange]  = useState("7d");

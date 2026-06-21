@@ -7,14 +7,14 @@ import { useNotifications } from './hooks/useNotifications';
 import { useStore }         from './hooks/useStore';
 import { useRider }         from './hooks/useRider';
 import { subscribeToPush }  from './lib/pushNotifications';
-import RoleSelector     from './components/RoleSelector';
-import AuthGate         from './components/AuthGate';
-import AppShell         from './components/AppShell';
-import AttendantCheckIn from './components/AttendantCheckIn';
-import CustomerApp      from './components/CustomerApp';
-import RiderApp         from './components/RiderApp';
-import StoreApp         from './components/StoreApp';
-import { ToastContainer } from './components/Toast';
+import RoleSelector     from './components/auth/RoleSelector';
+import AuthGate         from './components/auth/AuthGate';
+import AppShell         from './components/layout/AppShell';
+import AttendantCheckIn from './components/shared/AttendantCheckIn';
+import CustomerApp      from './components/apps/CustomerApp';
+import RiderApp         from './components/apps/RiderApp';
+import StoreApp         from './components/apps/StoreApp';
+import { ToastContainer } from './components/shared/Toast';
 
 function LoadingScreen() {
   return (

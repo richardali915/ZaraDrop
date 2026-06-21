@@ -3,8 +3,8 @@ import { ArrowLeft } from "lucide-react";
 import {
   AreaChart, Area, XAxis, Tooltip, ResponsiveContainer,
 } from "recharts";
-import { C, G, IS } from "../constants";
-import { fmt, gl } from "../utils";
+import { C, G, IS } from "../../constants";
+import { fmt, gl } from "../../utils";
 
 export const Pill = ({ label, color }) => (
   <span style={{

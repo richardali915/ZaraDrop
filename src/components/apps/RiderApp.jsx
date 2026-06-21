@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Activity, TrendingUp, CreditCard, Star, MessageCircle, CheckCircle, DollarSign, Zap } from "lucide-react";
-import { C } from "../constants";
-import { gl } from "../utils";
-import { MILESTONES, getBankedBonus, getNextMilestone } from "../data";
-import { useOrders } from "../hooks/useOrders";
-import { SH, SC, Tog, Btn, MiniChart, Pill } from "./Micro";
-import WalletScreen from "./WalletScreen";
-import { ProfileSetup, ProfileCard } from "./Profile";
-import { ConfettiBurst, OrderCodeInput, RiderQuoteModal } from "./Modals";
+import { C } from "../../constants";
+import { gl } from "../../utils";
+import { MILESTONES, getBankedBonus, getNextMilestone } from "../../data";
+import { useOrders } from "../../hooks/useOrders";
+import { SH, SC, Tog, Btn, MiniChart, Pill } from "../shared/Micro";
+import WalletScreen from "../shared/WalletScreen";
+import { ProfileSetup, ProfileCard } from "../shared/Profile";
+import { ConfettiBurst, OrderCodeInput, RiderQuoteModal } from "../shared/Modals";
 
 function MilestonePanel({ deliveries = 0 }) {
   const banked = getBankedBonus(deliveries);

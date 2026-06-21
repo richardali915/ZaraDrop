@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { C, G, CSS } from "../constants";
+import { C, G, CSS } from "../../constants";
 
 export default function PINModal({ title, sub, onOk, onCancel, stored }) {
   const [p, sP] = useState("");

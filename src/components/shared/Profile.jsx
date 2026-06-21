@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Edit3, Settings, ChevronRight, Users, Plus, Package, CreditCard, Star, Activity, TrendingUp } from "lucide-react";
-import { C, G } from "../constants";
-import { gl } from "../utils";
-import { RC } from "../data";
+import { C, G } from "../../constants";
+import { gl } from "../../utils";
+import { RC } from "../../data";
 import { Pill, Tog, SH, SC, Back, FI, Btn } from "./Micro";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 // ─── PROFILE SETUP ───────────────────────────────────────────
 export function ProfileSetup({ role, userId }) {

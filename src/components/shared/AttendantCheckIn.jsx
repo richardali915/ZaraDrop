@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { CheckCircle, UserCheck } from "lucide-react";
-import { C, GZ, CSS } from "../constants";
-import { gl } from "../utils";
+import { C, GZ, CSS } from "../../constants";
+import { gl } from "../../utils";
 import { Btn } from "./Micro";
 
 export default function AttendantCheckIn({ storeHook, onCheckedIn }) {

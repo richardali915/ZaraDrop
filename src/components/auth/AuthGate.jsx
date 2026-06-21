@@ -57,13 +57,27 @@ function SocialSignIn({ rc, role, onBack, onSignedIn }) {
   const [err,     setErr]     = useState('');
 
   // After OAuth redirect, Supabase restores the session automatically.
-  // We listen here in case the user returns on the same tab.
+  // We listen here in case the user returns on the same tab and also
+  // explicitly check the current session so we don't miss the callback.
   useEffect(() => {
+    let mounted = true;
+
+    const syncSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (mounted && session?.user) onSignedIn(session.user);
+    };
+
+    syncSession();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session?.user) onSignedIn(session.user);
+      if (mounted && session?.user) onSignedIn(session.user);
     });
-    return () => subscription.unsubscribe();
-  }, []);
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, [onSignedIn]);
 
   const handleOAuth = async (provider) => {
     setErr(''); setLoading(provider);

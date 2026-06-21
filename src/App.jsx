@@ -27,7 +27,7 @@ function LoadingScreen() {
 }
 
 export default function App() {
-  const { user, profile, loading: authLoading, signOut } = useAuth();
+  const { user, profile, loading: authLoading, signOut, createProfile } = useAuth();
 
   const [pendingRole,       setPendingRole]      = useState(null);
   const [activeRole,        setActiveRole]       = useState(null);
@@ -114,14 +114,27 @@ export default function App() {
     setPendingRole(role);
   }, [user, profile]);
 
-  const handleAuthSuccess = useCallback((opts = {}) => {
+  const handleAuthSuccess = useCallback(async (opts = {}) => {
     setIsStoreAdmin(!!opts.isAdmin);
     const role = pendingRole || sessionStorage.getItem('zaradrop_pending_role') || 'customer';
+
+    // Ensure the profile row exists for the chosen role before entering the app.
+    if (user && !profile?.role) {
+      try {
+        await createProfile({
+          role,
+          phone: user.phone || user.user_metadata?.phone || '',
+        });
+      } catch (e) {
+        console.warn('[ZaraDrop] Profile bootstrap failed:', e);
+      }
+    }
+
     setActiveRole(role);
     setPendingRole(null);
     sessionStorage.removeItem('zaradrop_pending_role');
     setTab(0); setShowChat(false); setShowNotif(false);
-  }, [pendingRole]);
+  }, [pendingRole, user, profile, createProfile]);
 
   const openChat = useCallback((convId) => {
     setChatJump(convId); setShowChat(true); setShowNotif(false);

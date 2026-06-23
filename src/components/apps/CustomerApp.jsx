@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Star, Clock, MapPin, Search, Plus, Minus, MessageCircle, ArrowLeft, Package } from "lucide-react";
-import { C, G } from "../../constants";
-import { gl, fmt } from "../../utils";
+import {
+  Star, MapPin, Search, Plus, Minus, MessageCircle, ArrowLeft,
+  Wallet, Banknote, KeyRound, Flame, Sparkles, Target, Rocket,
+} from "lucide-react";
+import { C, G } from "../../styles/tokens";
+import { gl } from "../../styles/glass";
+import { statusMeta } from "../../styles/statusIcons";
 import { useStores }   from "../../hooks/useStores";
 import { useOrders }   from "../../hooks/useOrders";
 import { callFn }      from "../../lib/supabase";
@@ -95,46 +99,51 @@ export default function CustomerApp({ tab, isMobile, user, profile, wallet, open
       {pinOpen && <PINModal title="Confirm Payment" sub="Enter your wallet PIN" stored={null}
         onOk={() => doPlaceOrder()} onCancel={() => setPinOpen(false)} />}
       {/* Store hero */}
-      <div style={{ height: 120, background: "linear-gradient(160deg,rgba(193,68,212,.4) 0%,rgba(6,6,15,1) 100%)", position: "relative", display: "flex", alignItems: "flex-end", padding: "12px 13px" }}>
+      <div style={{ height: 132, background: "linear-gradient(160deg,rgba(193,63,224,.4) 0%,var(--zd-bg) 100%)", position: "relative", display: "flex", alignItems: "flex-end", padding: "12px 14px" }}>
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 85% -10%, rgba(193,63,224,.35), transparent 55%)", pointerEvents: "none" }} />
         <button onClick={() => { setSV(null); setSMenu([]); setCart({}); setCheckout(false); }}
-          style={{ position: "absolute", top: 12, left: 12, background: "rgba(0,0,0,.5)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,.14)", cursor: "pointer", width: 32, height: 32, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", zIndex: 2 }}>
-          <ArrowLeft size={14} />
+          style={{ position: "absolute", top: 12, left: 12, background: "rgba(10,8,18,.55)", backdropFilter: "blur(14px)", border: "1px solid rgba(255,255,255,.16)", cursor: "pointer", width: 33, height: 33, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", zIndex: 2, transition: "transform .15s ease" }}
+          onMouseEnter={e => e.currentTarget.style.transform = "translateX(-2px)"}
+          onMouseLeave={e => e.currentTarget.style.transform = "none"}>
+          <ArrowLeft size={15} />
         </button>
-        <div style={{ position: "relative", zIndex: 2, display: "flex", alignItems: "center", gap: 10, width: "100%" }}>
-          <span style={{ fontSize: 30 }}>{storeView.logo}</span>
+        <div style={{ position: "relative", zIndex: 2, display: "flex", alignItems: "center", gap: 11, width: "100%" }}>
+          <div style={{ width: 52, height: 52, borderRadius: 16, background: "rgba(10,8,18,.4)", border: "1px solid rgba(255,255,255,.14)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, flexShrink: 0 }}>{storeView.logo}</div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 800, fontSize: 16, color: "#fff" }}>{storeView.name}</div>
-            <div style={{ display: "flex", gap: 8, marginTop: 4, flexWrap: "wrap" }}>
-              <span style={{ fontSize: 11, color: "rgba(255,255,255,.65)", display: "flex", alignItems: "center", gap: 2 }}><Star size={9} fill={C.wa} color={C.wa} />{storeView.rating}</span>
-              <span style={{ fontSize: 11, color: "rgba(255,255,255,.65)", display: "flex", alignItems: "center", gap: 2 }}><MapPin size={9} />{storeView.location}</span>
+            <div style={{ fontWeight: 800, fontSize: 17, color: "#fff", letterSpacing: -.2 }}>{storeView.name}</div>
+            <div style={{ display: "flex", gap: 8, marginTop: 5, flexWrap: "wrap" }}>
+              <span style={{ fontSize: 11, color: "rgba(255,255,255,.68)", display: "flex", alignItems: "center", gap: 3 }}><Star size={10} fill="#F5A623" color="#F5A623" />{storeView.rating}</span>
+              <span style={{ fontSize: 11, color: "rgba(255,255,255,.68)", display: "flex", alignItems: "center", gap: 3 }}><MapPin size={10} />{storeView.location}</span>
               <Pill label={storeView.is_open ? "Open" : "Closed"} color={storeView.is_open ? C.ok : C.er} />
             </div>
           </div>
           <button onClick={() => openChat(`conv_${storeView.id}`, storeView.name, storeView.logo, "store")}
-            style={{ background: "rgba(193,68,212,.18)", border: `1px solid ${C.ac}30`, cursor: "pointer", width: 32, height: 32, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", color: C.ac }}>
-            <MessageCircle size={14} />
+            style={{ background: "rgba(193,63,224,.2)", border: `1px solid ${C.ac}40`, cursor: "pointer", width: 34, height: 34, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: C.ac, transition: "transform .15s ease" }}
+            onMouseEnter={e => e.currentTarget.style.transform = "scale(1.08)"}
+            onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}>
+            <MessageCircle size={15} />
           </button>
         </div>
       </div>
       {/* Menu */}
-      <div style={{ padding: "13px 13px 0" }}>
+      <div style={{ padding: "14px 13px 0" }}>
         {storeMenu.filter(it => it.is_popular && it.is_available).length > 0 && (
           <>
-            <SH title="🔥 Popular" />
-            <div style={{ display: "flex", gap: 9, overflowX: "auto", marginBottom: 14, scrollbarWidth: "none", paddingBottom: 3 }}>
+            <SH title={<span style={{ display: "flex", alignItems: "center", gap: 6 }}><Flame size={14} color="#FF6B35" />Popular</span>} />
+            <div className="zd-hide-scroll" style={{ display: "flex", gap: 9, overflowX: "auto", marginBottom: 16, paddingBottom: 3 }}>
               {storeMenu.filter(it => it.is_popular && it.is_available).map(it => {
                 const q = cart[it.id] || 0;
                 const priceN = it.price / 100;
                 return (
-                  <div key={it.id} style={{ flexShrink: 0, width: 124, ...gl(), borderRadius: 14, padding: "11px 10px", display: "flex", flexDirection: "column", gap: 4 }}>
-                    <div style={{ fontSize: 24, textAlign: "center" }}>{it.emoji}</div>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: C.tx, textAlign: "center", lineHeight: 1.3 }}>{it.name}</div>
-                    <div style={{ fontSize: 12, color: C.ac, fontWeight: 800, textAlign: "center" }}>₦{priceN.toLocaleString()}</div>
-                    {q === 0 ? <Btn v="o" sm full onClick={() => addToCart(it.id)}>+ Add</Btn>
+                  <div key={it.id} style={{ flexShrink: 0, width: 128, ...gl(), borderRadius: 16, padding: "12px 11px", display: "flex", flexDirection: "column", gap: 5 }}>
+                    <div style={{ fontSize: 26, textAlign: "center" }}>{it.emoji}</div>
+                    <div style={{ fontSize: 11.5, fontWeight: 700, color: C.tx, textAlign: "center", lineHeight: 1.3 }}>{it.name}</div>
+                    <div className="zd-tabular" style={{ fontSize: 12.5, color: C.ac, fontWeight: 800, textAlign: "center" }}>₦{priceN.toLocaleString()}</div>
+                    {q === 0 ? <Btn v="o" sm full onClick={() => addToCart(it.id)}><Plus size={11} />Add</Btn>
                       : <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <button onClick={() => remFromCart(it.id)} style={{ width: 26, height: 26, borderRadius: 7, background: `${C.ac}12`, border: `1px solid ${C.ac}22`, color: C.ac, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Minus size={10} /></button>
-                        <span style={{ color: C.tx, fontWeight: 700 }}>{q}</span>
-                        <button onClick={() => addToCart(it.id)} style={{ width: 26, height: 26, borderRadius: 7, background: G, border: "none", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Plus size={10} /></button>
+                        <button onClick={() => remFromCart(it.id)} style={{ width: 27, height: 27, borderRadius: 8, background: `${C.ac}16`, border: `1px solid ${C.ac}28`, color: C.ac, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Minus size={11} /></button>
+                        <span className="zd-tabular" style={{ color: C.tx, fontWeight: 700 }}>{q}</span>
+                        <button onClick={() => addToCart(it.id)} style={{ width: 27, height: 27, borderRadius: 8, background: G, border: "none", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 3px 10px rgba(193,63,224,.4)" }}><Plus size={11} /></button>
                       </div>}
                   </div>
                 );
@@ -144,7 +153,7 @@ export default function CustomerApp({ tab, isMobile, user, profile, wallet, open
         )}
         <SH title="Full Menu" />
         {storeMenu.length === 0 && (
-          <div style={{ textAlign: "center", padding: "30px 0", color: C.su, fontSize: 12 }}>
+          <div style={{ textAlign: "center", padding: "34px 0", color: C.su, fontSize: 12 }}>
             {storesHook.loading ? "Loading menu…" : "No items available"}
           </div>
         )}
@@ -152,92 +161,100 @@ export default function CustomerApp({ tab, isMobile, user, profile, wallet, open
           const priceN = it.price / 100;
           const q = cart[it.id] || 0;
           return (
-            <div key={it.id} style={{ ...gl(), borderRadius: 13, padding: "11px 12px", marginBottom: 7, display: "flex", alignItems: "center", gap: 9, opacity: !it.is_available ? 0.45 : 1 }}>
-              <div style={{ fontSize: 20, flexShrink: 0 }}>{it.emoji}</div>
+            <div key={it.id} style={{ ...gl(), borderRadius: 14, padding: "12px 13px", marginBottom: 8, display: "flex", alignItems: "center", gap: 10, opacity: !it.is_available ? 0.45 : 1, transition: "border-color .15s ease" }}>
+              <div style={{ fontSize: 21, flexShrink: 0, width: 38, height: 38, borderRadius: 11, background: "var(--zd-surface-hover)", display: "flex", alignItems: "center", justifyContent: "center" }}>{it.emoji}</div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 700, color: C.tx, fontSize: 13 }}>{it.name}</div>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 1 }}>
-                  <div style={{ fontSize: 12, color: C.ac, fontWeight: 700 }}>₦{priceN.toLocaleString()}</div>
+                <div style={{ fontWeight: 700, color: C.tx, fontSize: 13.5 }}>{it.name}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, marginTop: 2 }}>
+                  <div className="zd-tabular" style={{ fontSize: 12.5, color: C.ac, fontWeight: 700 }}>₦{priceN.toLocaleString()}</div>
                   {!it.is_available ? <Pill label="Unavailable" color={C.er} />
                     : it.stock != null && it.stock <= 5 ? <Pill label={`${it.stock} left`} color={C.wa} /> : null}
                 </div>
               </div>
               {it.is_available && (
                 q === 0
-                  ? <button onClick={() => addToCart(it.id)} style={{ width: 28, height: 28, borderRadius: 8, background: G, border: "none", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Plus size={12} /></button>
-                  : <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <button onClick={() => remFromCart(it.id)} style={{ width: 26, height: 26, borderRadius: 7, background: `${C.ac}12`, border: `1px solid ${C.ac}22`, color: C.ac, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Minus size={10} /></button>
-                    <span style={{ color: C.tx, fontWeight: 700, fontSize: 13, minWidth: 14, textAlign: "center" }}>{q}</span>
-                    <button onClick={() => addToCart(it.id)} style={{ width: 26, height: 26, borderRadius: 7, background: G, border: "none", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Plus size={10} /></button>
+                  ? <button onClick={() => addToCart(it.id)} style={{ width: 30, height: 30, borderRadius: 9, background: G, border: "none", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 3px 10px rgba(193,63,224,.35)" }}><Plus size={13} /></button>
+                  : <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                    <button onClick={() => remFromCart(it.id)} style={{ width: 27, height: 27, borderRadius: 8, background: `${C.ac}16`, border: `1px solid ${C.ac}28`, color: C.ac, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Minus size={11} /></button>
+                    <span className="zd-tabular" style={{ color: C.tx, fontWeight: 700, fontSize: 13, minWidth: 14, textAlign: "center" }}>{q}</span>
+                    <button onClick={() => addToCart(it.id)} style={{ width: 27, height: 27, borderRadius: 8, background: G, border: "none", color: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Plus size={11} /></button>
                   </div>
               )}
             </div>
           );
         })}
       </div>
-      {/* Cart bar */}
+      {/* Cart bar — sticky on desktop so it never spills past the sidebar, fixed (viewport) on mobile */}
       {cartCount > 0 && !checkout && (
-        <div style={{ position: "fixed", bottom: 58, left: 0, right: 0, padding: "0 10px", zIndex: 100 }}>
-          <button onClick={() => setCheckout(true)} style={{ width: "100%", padding: "14px", borderRadius: 15, background: G, border: "none", color: "#fff", fontSize: 13, fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0 8px 32px rgba(193,68,212,.5)", fontFamily: "inherit" }}>
-            <span style={{ background: "rgba(255,255,255,.2)", borderRadius: 8, padding: "3px 9px", fontSize: 12 }}>{cartCount} item{cartCount !== 1 ? "s" : ""}</span>
+        <div style={{
+          position: isMobile ? "fixed" : "sticky",
+          bottom: isMobile ? 58 : 16,
+          left: 0, right: 0,
+          padding: isMobile ? "0 10px" : "0",
+          zIndex: 100,
+        }}>
+          <button onClick={() => setCheckout(true)} style={{ width: "100%", padding: "15px 18px", borderRadius: 16, background: G, border: "none", color: "#fff", fontSize: 13, fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0 12px 36px rgba(193,63,224,.45)", fontFamily: "inherit", transition: "transform .15s ease" }}
+            onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
+            onMouseLeave={e => e.currentTarget.style.transform = "none"}>
+            <span style={{ background: "rgba(255,255,255,.22)", borderRadius: 9, padding: "4px 10px", fontSize: 12 }}>{cartCount} item{cartCount !== 1 ? "s" : ""}</span>
             <span>Checkout →</span>
-            <span>₦{cartTotal.toLocaleString()}</span>
+            <span className="zd-tabular">₦{cartTotal.toLocaleString()}</span>
           </button>
         </div>
       )}
       {/* Checkout drawer */}
       {checkout && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.87)", backdropFilter: "blur(16px)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 900 }} onClick={e => e.target === e.currentTarget && setCheckout(false)}>
-          <div style={{ background: "#0D0D22", border: "1px solid #252548", borderRadius: "22px 22px 0 0", padding: "18px 14px 30px", width: "100%", maxWidth: 480, boxSizing: "border-box", maxHeight: "92vh", overflowY: "auto" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 13 }}>
-              <div style={{ fontWeight: 800, fontSize: 15, color: C.tx }}>Checkout — {storeView.name}</div>
-              <button onClick={() => setCheckout(false)} style={{ background: "rgba(255,255,255,.07)", border: "1px solid rgba(255,255,255,.12)", cursor: "pointer", width: 30, height: 30, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", color: C.su }}>✕</button>
+        <div style={{ position: "fixed", inset: 0, background: "rgba(4,3,9,.82)", backdropFilter: "blur(18px)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 900 }} onClick={e => e.target === e.currentTarget && setCheckout(false)}>
+          <div style={{ background: "var(--zd-surface-1)", border: "1px solid var(--zd-border)", borderRadius: "24px 24px 0 0", padding: "20px 16px 30px", width: "100%", maxWidth: 480, boxSizing: "border-box", maxHeight: "92vh", overflowY: "auto", boxShadow: "var(--zd-shadow-lg)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 15 }}>
+              <div style={{ fontWeight: 800, fontSize: 15.5, color: C.tx }}>Checkout — {storeView.name}</div>
+              <button onClick={() => setCheckout(false)} style={{ background: "var(--zd-surface)", border: "1px solid var(--zd-border)", cursor: "pointer", width: 31, height: 31, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: C.su }}>✕</button>
             </div>
             {/* Items */}
-            <div style={{ ...gl(), borderRadius: 13, padding: "11px 12px", marginBottom: 10 }}>
+            <div style={{ ...gl(), borderRadius: 14, padding: "12px 13px", marginBottom: 11 }}>
               {Object.entries(cart).map(([id, q]) => {
                 const it = storeMenu.find(x => x.id === id);
                 if (!it) return null;
-                return <div key={id} style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                return <div key={id} style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
                   <span style={{ fontSize: 12, color: C.su }}>{it.emoji} {it.name} ×{q}</span>
-                  <span style={{ fontSize: 12, color: C.tx, fontWeight: 600 }}>₦{((it.price / 100) * q).toLocaleString()}</span>
+                  <span className="zd-tabular" style={{ fontSize: 12, color: C.tx, fontWeight: 600 }}>₦{((it.price / 100) * q).toLocaleString()}</span>
                 </div>;
               })}
-              <div style={{ borderTop: "1px solid rgba(255,255,255,.08)", marginTop: 6, paddingTop: 6 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.su, marginBottom: 3 }}><span>Subtotal</span><span>₦{cartTotal.toLocaleString()}</span></div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.su, marginBottom: 3 }}><span>Delivery Fee</span><span>₦900</span></div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.su, marginBottom: 3 }}><span>Service (2%)</span><span>₦{(cartTotal * 0.02).toFixed(0)}</span></div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14, fontWeight: 800, color: C.ac, marginTop: 4 }}><span>Total</span><span>₦{(cartTotal + 900 + cartTotal * 0.02).toLocaleString()}</span></div>
-                <div style={{ fontSize: 10, color: C.ok, marginTop: 4 }}>🌟 You'll earn {Math.round(cartTotal * 0.02)} ZP</div>
+              <div style={{ borderTop: "1px solid var(--zd-border)", marginTop: 7, paddingTop: 7 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.su, marginBottom: 4 }}><span>Subtotal</span><span className="zd-tabular">₦{cartTotal.toLocaleString()}</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.su, marginBottom: 4 }}><span>Delivery Fee</span><span className="zd-tabular">₦900</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.su, marginBottom: 4 }}><span>Service (2%)</span><span className="zd-tabular">₦{(cartTotal * 0.02).toFixed(0)}</span></div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 15, fontWeight: 800, color: C.ac, marginTop: 5 }}><span>Total</span><span className="zd-tabular">₦{(cartTotal + 900 + cartTotal * 0.02).toLocaleString()}</span></div>
+                <div style={{ fontSize: 10, color: C.ok, marginTop: 5, display: "flex", alignItems: "center", gap: 4 }}><Sparkles size={11} />You'll earn {Math.round(cartTotal * 0.02)} ZP</div>
               </div>
             </div>
             {/* Address */}
-            <div style={{ marginBottom: 8 }}>
-              <div style={{ fontSize: 9, color: C.su, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 3 }}>DELIVERY ADDRESS</div>
+            <div style={{ marginBottom: 9 }}>
+              <div style={{ fontSize: 9.5, color: "var(--zd-text-faint)", fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.1, marginBottom: 4 }}>DELIVERY ADDRESS</div>
               <input value={delivAddr} onChange={e => setDelivAddr(e.target.value)} placeholder="Your full delivery address…"
-                style={{ width: "100%", background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 9, padding: "8px 11px", fontSize: 12.5, outline: "none", boxSizing: "border-box", fontFamily: "inherit", color: "#EEF0FF" }} />
+                style={{ width: "100%", background: "var(--zd-surface)", border: "1px solid var(--zd-border)", borderRadius: 11, padding: "9px 12px", fontSize: 12.5, outline: "none", boxSizing: "border-box", fontFamily: "inherit", color: "var(--zd-text)" }} />
             </div>
             {/* Phone for delivery */}
-            <div style={{ marginBottom: 10 }}>
-              <div style={{ fontSize: 9, color: C.su, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 3 }}>PHONE FOR DELIVERY <span style={{color:'rgba(255,255,255,.25)'}}>— so rider can reach you</span></div>
+            <div style={{ marginBottom: 11 }}>
+              <div style={{ fontSize: 9.5, color: "var(--zd-text-faint)", fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.1, marginBottom: 4 }}>PHONE FOR DELIVERY <span style={{color:"var(--zd-text-faint)", textTransform: "none", letterSpacing: 0, fontWeight: 500}}>— so rider can reach you</span></div>
               <input value={delivPhone} onChange={e => setDelivPhone(e.target.value)} placeholder="+234 800 000 0000" type="tel"
-                style={{ width: "100%", background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.15)", borderRadius: 9, padding: "8px 11px", fontSize: 12.5, outline: "none", boxSizing: "border-box", fontFamily: "inherit", color: "#EEF0FF" }} />
+                style={{ width: "100%", background: "var(--zd-surface)", border: "1px solid var(--zd-border)", borderRadius: 11, padding: "9px 12px", fontSize: 12.5, outline: "none", boxSizing: "border-box", fontFamily: "inherit", color: "var(--zd-text)" }} />
             </div>
             {/* Payment */}
-            <div style={{ marginBottom: 13 }}>
-              <div style={{ fontSize: 9, color: C.su, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>PAYMENT METHOD</div>
-              {[{ k: "wallet", i: "⚡", l: "ZaraDrop Wallet", s: `Balance: ₦${(wallet.balance ?? 0).toLocaleString()}`, c: C.ac }, { k: "cash", i: "💵", l: "Cash on Delivery", s: "Pay rider directly", c: C.wa }].map(m => (
-                <div key={m.k} onClick={() => setPayMethod(m.k)} style={{ ...gl(), border: `1px solid ${payMethod === m.k ? m.c + "42" : "rgba(255,255,255,.08)"}`, borderRadius: 12, padding: "10px 12px", marginBottom: 6, cursor: "pointer", display: "flex", alignItems: "center", gap: 10, background: payMethod === m.k ? `${m.c}0D` : "transparent" }}>
-                  <span style={{ fontSize: 17 }}>{m.i}</span>
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ fontSize: 9.5, color: "var(--zd-text-faint)", fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.1, marginBottom: 7 }}>PAYMENT METHOD</div>
+              {[{ k: "wallet", Icon: Wallet, l: "ZaraDrop Wallet", s: `Balance: ₦${(wallet.balance ?? 0).toLocaleString()}`, c: C.ac }, { k: "cash", Icon: Banknote, l: "Cash on Delivery", s: "Pay rider directly", c: C.wa }].map(m => (
+                <div key={m.k} onClick={() => setPayMethod(m.k)} style={{ ...gl(), border: `1px solid ${payMethod === m.k ? m.c + "55" : "var(--zd-border)"}`, borderRadius: 13, padding: "11px 13px", marginBottom: 7, cursor: "pointer", display: "flex", alignItems: "center", gap: 11, background: payMethod === m.k ? `${m.c}10` : undefined }}>
+                  <div style={{ width: 34, height: 34, borderRadius: 10, background: `${m.c}18`, display: "flex", alignItems: "center", justifyContent: "center", color: m.c, flexShrink: 0 }}><m.Icon size={16} /></div>
                   <div style={{ flex: 1 }}><div style={{ fontSize: 13, fontWeight: 700, color: payMethod === m.k ? m.c : C.tx }}>{m.l}</div><div style={{ fontSize: 10, color: C.su }}>{m.s}</div></div>
-                  <div style={{ width: 15, height: 15, borderRadius: "50%", border: `2px solid ${payMethod === m.k ? m.c : C.bd}`, background: payMethod === m.k ? m.c : "transparent", flexShrink: 0 }} />
+                  <div style={{ width: 16, height: 16, borderRadius: "50%", border: `2px solid ${payMethod === m.k ? m.c : "var(--zd-border-strong)"}`, background: payMethod === m.k ? m.c : "transparent", flexShrink: 0 }} />
                 </div>
               ))}
             </div>
             {orderError && <div style={{ color: C.er, fontSize: 12, marginBottom: 10, fontWeight: 600 }}>{orderError}</div>}
             <Btn v="p" full disabled={placeLoading || delivAddr.trim().length < 5 || delivPhone.trim().length < 8}
               onClick={() => payMethod === "wallet" ? setPinOpen(true) : doPlaceOrder()}>
-              {placeLoading ? "Placing…" : `🚀 Place Order · ₦${(cartTotal + 900 + cartTotal * 0.02).toFixed(0)}`}
+              {placeLoading ? "Placing…" : <><Rocket size={14} />Place Order · ₦{(cartTotal + 900 + cartTotal * 0.02).toFixed(0)}</>}
             </Btn>
           </div>
         </div>
@@ -248,85 +265,97 @@ export default function CustomerApp({ tab, isMobile, user, profile, wallet, open
   // ── HOME / STORES TAB ───────────────────────────────────────
   if (tab === 0 || tab === 1) {
     const slide = AD_HERO[adSlide];
-    const modeColor = appMode === "Pharmacy" ? "#22D47C" : appMode === "Supermarket" ? "#F59E0B" : C.ac;
+    const modeColor = appMode === "Pharmacy" ? C.ok : appMode === "Supermarket" ? C.wa : C.ac;
     const featured  = stores.filter(s => s.is_featured && s.is_open);
 
     // Inside-mode view
     if (appMode) return (
       <div style={{ paddingBottom: 16 }}>
         {showReqRider && <RequestRiderModal onClose={() => setReqRider(false)} />}
-        {/* Fixed sub-header */}
-        <div style={{ position: "fixed", top: 48, left: 0, right: 0, background: "rgba(6,6,15,.98)", backdropFilter: "blur(20px)", zIndex: 150, borderBottom: "1px solid rgba(255,255,255,.07)", padding: "0 12px", height: 44, display: "flex", alignItems: "center", gap: 8 }}>
-          <button onClick={() => { setMode(null); setCat("All"); setQ(""); setShowSearch(false); }} style={{ background: "none", border: "none", cursor: "pointer", width: 28, height: 28, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,.5)", flexShrink: 0 }}>
-            <ArrowLeft size={15} />
+        {/* Sub-header — sticky on desktop (stays within the content column, never spills onto the sidebar), fixed to the viewport on mobile */}
+        <div style={{
+          position: isMobile ? "fixed" : "sticky",
+          top: isMobile ? 48 : 0,
+          left: 0, right: 0,
+          background: "var(--zd-bg)",
+          backdropFilter: "blur(20px)",
+          zIndex: 150,
+          borderBottom: "1px solid var(--zd-border)",
+          padding: "0 12px", height: 46,
+          display: "flex", alignItems: "center", gap: 8,
+        }}>
+          <button onClick={() => { setMode(null); setCat("All"); setQ(""); setShowSearch(false); }} style={{ background: "none", border: "none", cursor: "pointer", width: 29, height: 29, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--zd-text-dim)", flexShrink: 0 }}>
+            <ArrowLeft size={16} />
           </button>
           {showSearch ? (
             <div style={{ flex: 1, position: "relative" }}>
-              <Search size={11} color="rgba(255,255,255,.3)" style={{ position: "absolute", left: 8, top: "50%", transform: "translateY(-50%)" }} />
+              <Search size={12} color="var(--zd-text-faint)" style={{ position: "absolute", left: 9, top: "50%", transform: "translateY(-50%)" }} />
               <input autoFocus value={q} onChange={e => setQ(e.target.value)} placeholder="Search…"
-                style={{ width: "100%", background: "rgba(255,255,255,.07)", border: "1px solid rgba(255,255,255,.12)", borderRadius: 8, padding: "6px 8px 6px 26px", fontSize: 12, outline: "none", boxSizing: "border-box", fontFamily: "inherit", color: "#EEF0FF" }} />
-              <button onClick={() => { setShowSearch(false); setQ(""); }} style={{ position: "absolute", right: 6, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,.4)", fontFamily: "inherit", fontSize: 13 }}>✕</button>
+                style={{ width: "100%", background: "var(--zd-surface)", border: "1px solid var(--zd-border)", borderRadius: 9, padding: "7px 9px 7px 28px", fontSize: 12, outline: "none", boxSizing: "border-box", fontFamily: "inherit", color: "var(--zd-text)" }} />
+              <button onClick={() => { setShowSearch(false); setQ(""); }} style={{ position: "absolute", right: 7, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--zd-text-faint)", fontFamily: "inherit", fontSize: 13 }}>✕</button>
             </div>
           ) : (
-            <div style={{ flex: 1, fontWeight: 800, fontSize: 14, color: C.tx }}>
-              {appMode === "Food" ? "🍽️ Restaurants" : appMode === "Pharmacy" ? "💊 Pharmacies" : "🛒 Supermarkets"}
+            <div style={{ flex: 1, fontWeight: 800, fontSize: 14.5, color: C.tx, letterSpacing: -.2 }}>
+              {appMode === "Food" ? "Restaurants" : appMode === "Pharmacy" ? "Pharmacies" : "Supermarkets"}
             </div>
           )}
-          <button onClick={() => setShowSearch(p => !p)} style={{ background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.09)", cursor: "pointer", width: 30, height: 30, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,.55)", flexShrink: 0 }}>
-            <Search size={13} />
+          <button onClick={() => setShowSearch(p => !p)} style={{ background: "var(--zd-surface)", border: "1px solid var(--zd-border)", cursor: "pointer", width: 31, height: 31, borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--zd-text-dim)", flexShrink: 0 }}>
+            <Search size={14} />
           </button>
           {appMode === "Food" && (
-            <button onClick={() => setReqRider(true)} style={{ background: "rgba(255,107,53,.1)", border: "1px solid rgba(255,107,53,.22)", borderRadius: 8, padding: "5px 9px", cursor: "pointer", color: "#FF6B35", fontSize: 10, fontWeight: 700, fontFamily: "inherit", flexShrink: 0, whiteSpace: "nowrap" }}>
-              🎯 Rider
+            <button onClick={() => setReqRider(true)} style={{ background: "rgba(255,107,53,.12)", border: "1px solid rgba(255,107,53,.26)", borderRadius: 9, padding: "6px 10px", cursor: "pointer", color: "#FF6B35", fontSize: 10, fontWeight: 700, fontFamily: "inherit", flexShrink: 0, whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 4 }}>
+              <Target size={11} />Rider
             </button>
           )}
         </div>
-        <div style={{ paddingTop: 52 }}>
+        <div style={{ paddingTop: isMobile ? 52 : 10 }}>
           {/* Category pills */}
-          <div style={{ padding: "6px 12px 2px", background: "rgba(6,6,15,.7)" }}>
-            <div style={{ display: "flex", gap: 5, overflowX: "auto", scrollbarWidth: "none", paddingBottom: 2 }}>
+          <div style={{ padding: "6px 12px 2px" }}>
+            <div className="zd-hide-scroll" style={{ display: "flex", gap: 6, overflowX: "auto", paddingBottom: 2 }}>
               {currentCats.map(c => (
-                <div key={c} onClick={() => setCat(c)} style={{ flexShrink: 0, padding: "5px 11px", borderRadius: 18, cursor: "pointer", fontSize: 11, fontWeight: cat === c ? 700 : 500, background: cat === c ? (appMode === "Pharmacy" ? "rgba(34,212,124,.2)" : appMode === "Supermarket" ? "rgba(245,158,11,.2)" : G) : "rgba(255,255,255,.04)", color: cat === c ? "#fff" : "rgba(255,255,255,.45)", transition: "all .16s" }}>{c}</div>
+                <div key={c} onClick={() => setCat(c)} style={{ flexShrink: 0, padding: "6px 13px", borderRadius: 20, cursor: "pointer", fontSize: 11.5, fontWeight: cat === c ? 700 : 500, background: cat === c ? (appMode === "Pharmacy" ? "rgba(31,214,122,.2)" : appMode === "Supermarket" ? "rgba(245,166,35,.2)" : G) : "var(--zd-surface)", border: cat === c ? "none" : "1px solid var(--zd-border)", color: cat === c ? "#fff" : "var(--zd-text-dim)", transition: "all .16s ease" }}>{c}</div>
               ))}
             </div>
           </div>
-          <div style={{ padding: "8px 12px 0" }}>
+          <div style={{ padding: "10px 12px 0" }}>
             {/* Featured row */}
             {!q && cat === "All" && featured.length > 0 && (
               <>
-                <div style={{ fontSize: 10, fontWeight: 700, color: C.su, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>⭐ Featured</div>
-                <div style={{ display: "flex", gap: 7, overflowX: "auto", marginBottom: 10, scrollbarWidth: "none" }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: C.su, textTransform: "uppercase", letterSpacing: 1, marginBottom: 7, display: "flex", alignItems: "center", gap: 5 }}><Sparkles size={11} color={C.wa} />Featured</div>
+                <div className="zd-hide-scroll" style={{ display: "flex", gap: 8, overflowX: "auto", marginBottom: 12 }}>
                   {featured.map(s => (
-                    <div key={s.id} onClick={() => setSV(s)} style={{ flexShrink: 0, width: 100, background: "rgba(255,255,255,.03)", border: `1px solid ${modeColor}20`, borderRadius: 11, padding: "9px 8px", cursor: "pointer" }}>
-                      <div style={{ width: 30, height: 30, borderRadius: 8, background: `${modeColor}14`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, marginBottom: 5 }}>{s.logo}</div>
-                      <div style={{ fontWeight: 700, color: C.tx, fontSize: 10, lineHeight: 1.2, marginBottom: 2 }}>{s.name}</div>
-                      <div style={{ fontSize: 9, color: modeColor, fontWeight: 700 }}>⭐ {s.rating}</div>
+                    <div key={s.id} onClick={() => setSV(s)} style={{ flexShrink: 0, width: 104, background: "var(--zd-surface)", border: `1px solid ${modeColor}26`, borderRadius: 13, padding: "10px 9px", cursor: "pointer", transition: "transform .15s ease" }}
+                      onMouseEnter={e => e.currentTarget.style.transform = "translateY(-2px)"}
+                      onMouseLeave={e => e.currentTarget.style.transform = "none"}>
+                      <div style={{ width: 32, height: 32, borderRadius: 9, background: `${modeColor}16`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, marginBottom: 6 }}>{s.logo}</div>
+                      <div style={{ fontWeight: 700, color: C.tx, fontSize: 10.5, lineHeight: 1.2, marginBottom: 3 }}>{s.name}</div>
+                      <div style={{ fontSize: 9.5, color: modeColor, fontWeight: 700, display: "flex", alignItems: "center", gap: 3 }}><Star size={9} fill={modeColor} color={modeColor} />{s.rating}</div>
                     </div>
                   ))}
                 </div>
               </>
             )}
             {/* Store list */}
-            <div style={{ fontSize: 10, fontWeight: 700, color: C.su, textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: C.su, textTransform: "uppercase", letterSpacing: 1, marginBottom: 7 }}>
               {storesHook.loading ? "Loading…" : `${filtered.length} ${appMode === "Food" ? "restaurants" : appMode === "Pharmacy" ? "pharmacies" : "stores"}`}
             </div>
             {filtered.map(s => (
-              <div key={s.id} style={{ background: "rgba(255,255,255,.03)", border: `1px solid ${modeColor}18`, borderRadius: 13, padding: "11px", display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 6 }}>
-                <div onClick={() => setSV(s)} style={{ width: 42, height: 42, borderRadius: 11, background: `${modeColor}12`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 21, flexShrink: 0, cursor: "pointer" }}>{s.logo}</div>
+              <div key={s.id} style={{ ...gl(), borderRadius: 15, padding: "12px", display: "flex", gap: 11, alignItems: "flex-start", marginBottom: 7 }}>
+                <div onClick={() => setSV(s)} style={{ width: 44, height: 44, borderRadius: 12, background: `${modeColor}14`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, flexShrink: 0, cursor: "pointer" }}>{s.logo}</div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 2, flexWrap: "wrap" }}>
-                    <span onClick={() => setSV(s)} style={{ fontWeight: 700, color: C.tx, fontSize: 13, cursor: "pointer" }}>{s.name}</span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3, flexWrap: "wrap" }}>
+                    <span onClick={() => setSV(s)} style={{ fontWeight: 700, color: C.tx, fontSize: 13.5, cursor: "pointer" }}>{s.name}</span>
                     <Pill label={s.is_open ? "Open" : "Closed"} color={s.is_open ? C.ok : C.er} />
                     {s.is_featured && <Pill label="Top" color={modeColor} />}
                   </div>
-                  {s.tagline && <div style={{ fontSize: 10, color: C.su, marginBottom: 4 }}>{s.tagline}</div>}
-                  <div style={{ display: "flex", gap: 8, color: "rgba(255,255,255,.35)", fontSize: 10, marginBottom: 6 }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: 2 }}><Star size={8} fill={C.wa} color={C.wa} />{s.rating}</span>
-                    <span style={{ display: "flex", alignItems: "center", gap: 2 }}><MapPin size={8} />{s.location}</span>
+                  {s.tagline && <div style={{ fontSize: 10.5, color: C.su, marginBottom: 5 }}>{s.tagline}</div>}
+                  <div style={{ display: "flex", gap: 9, color: "var(--zd-text-faint)", fontSize: 10.5, marginBottom: 7 }}>
+                    <span style={{ display: "flex", alignItems: "center", gap: 3 }}><Star size={9} fill={C.wa} color={C.wa} />{s.rating}</span>
+                    <span style={{ display: "flex", alignItems: "center", gap: 3 }}><MapPin size={9} />{s.location}</span>
                   </div>
-                  <div style={{ display: "flex", gap: 5 }}>
+                  <div style={{ display: "flex", gap: 6 }}>
                     <Btn v="p" sm onClick={() => setSV(s)}>View Menu</Btn>
-                    <Btn v="ghost" sm onClick={() => openChat(`conv_${s.id}`, s.name, s.logo, "store")}><MessageCircle size={10} />Chat</Btn>
+                    <Btn v="ghost" sm onClick={() => openChat(`conv_${s.id}`, s.name, s.logo, "store")}><MessageCircle size={11} />Chat</Btn>
                   </div>
                 </div>
               </div>
@@ -341,48 +370,49 @@ export default function CustomerApp({ tab, isMobile, user, profile, wallet, open
       <div style={{ paddingBottom: 16 }}>
         {/* Hero ad carousel */}
         <div style={{ position: "relative", overflow: "hidden" }}>
-          <div style={{ background: slide.bg, padding: "14px 14px 10px", minHeight: 116, position: "relative", overflow: "hidden", transition: "background .7s ease" }}>
-            <div style={{ position: "absolute", right: 14, top: 10, fontSize: 42, opacity: 0.1, pointerEvents: "none" }}>{slide.icon}</div>
+          <div style={{ background: slide.bg, padding: "16px 16px 11px", minHeight: 122, position: "relative", overflow: "hidden", transition: "background .7s ease" }}>
+            <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at 90% 0%, rgba(193,63,224,.18), transparent 60%)", pointerEvents: "none" }} />
+            <div style={{ position: "absolute", right: 16, top: 12, fontSize: 44, opacity: 0.12, pointerEvents: "none" }}>{slide.icon}</div>
             <div style={{ position: "relative", zIndex: 1 }}>
               {zpPoints > 0 && (
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "rgba(245,158,11,.14)", border: "1px solid rgba(245,158,11,.22)", borderRadius: 20, padding: "2px 8px", marginBottom: 6 }}>
-                  <span style={{ fontSize: 10 }}>⭐</span>
-                  <span style={{ color: C.wa, fontWeight: 700, fontSize: 10 }}>{zpPoints} ZP</span>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "rgba(245,166,35,.16)", border: "1px solid rgba(245,166,35,.26)", borderRadius: 20, padding: "3px 9px", marginBottom: 7 }}>
+                  <Sparkles size={10} color="#F5A623" />
+                  <span className="zd-tabular" style={{ color: "#F5A623", fontWeight: 700, fontSize: 10 }}>{zpPoints} ZP</span>
                 </div>
               )}
-              <div style={{ fontSize: 8, color: slide.accent, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, marginBottom: 2 }}>{slide.type === "hero" ? "ZaraDrop Abuja" : "Promotion"}</div>
-              <div style={{ fontSize: isMobile ? 16 : 20, fontWeight: 900, color: "#fff", lineHeight: 1.2, marginBottom: 3 }}>{slide.title}</div>
-              <div style={{ fontSize: 10, color: "rgba(255,255,255,.5)", marginBottom: 8 }}>{slide.sub}</div>
-              <button style={{ background: slide.accent, border: "none", borderRadius: 7, padding: "5px 11px", fontSize: 10, fontWeight: 700, color: "#fff", cursor: "pointer", fontFamily: "inherit" }}>{slide.cta}</button>
+              <div style={{ fontSize: 8.5, color: slide.accent, fontWeight: 700, textTransform: "uppercase", letterSpacing: 2, marginBottom: 3 }}>{slide.type === "hero" ? "ZaraDrop Abuja" : "Promotion"}</div>
+              <div style={{ fontSize: isMobile ? 17 : 21, fontWeight: 900, color: "#fff", lineHeight: 1.2, marginBottom: 4, letterSpacing: -.3 }}>{slide.title}</div>
+              <div style={{ fontSize: 10.5, color: "rgba(255,255,255,.55)", marginBottom: 9 }}>{slide.sub}</div>
+              <button style={{ background: slide.accent, border: "none", borderRadius: 9, padding: "6px 13px", fontSize: 10.5, fontWeight: 700, color: "#fff", cursor: "pointer", fontFamily: "inherit", boxShadow: `0 4px 16px ${slide.accent}55` }}>{slide.cta}</button>
             </div>
           </div>
-          <div style={{ display: "flex", justifyContent: "center", gap: 4, padding: "5px 0", background: C.bg }}>
-            {AD_HERO.map((_, i) => <div key={i} onClick={() => setAdSlide(i)} style={{ width: i === adSlide ? 14 : 4, height: 4, borderRadius: 2, background: i === adSlide ? slide.accent : "rgba(255,255,255,.13)", transition: "all .3s", cursor: "pointer" }} />)}
+          <div style={{ display: "flex", justifyContent: "center", gap: 4, padding: "7px 0", background: C.bg }}>
+            {AD_HERO.map((_, i) => <div key={i} onClick={() => setAdSlide(i)} style={{ width: i === adSlide ? 16 : 4, height: 4, borderRadius: 2, background: i === adSlide ? slide.accent : "var(--zd-border-strong)", transition: "all .3s ease", cursor: "pointer" }} />)}
           </div>
         </div>
 
-        <div style={{ padding: "8px 12px 0" }}>
+        <div style={{ padding: "9px 12px 0" }}>
           {/* Search */}
-          <div style={{ position: "relative", marginBottom: 12 }}>
-            <Search size={12} color="rgba(255,255,255,.25)" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)" }} />
+          <div style={{ position: "relative", marginBottom: 14 }}>
+            <Search size={13} color="var(--zd-text-faint)" style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)" }} />
             <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search food, medicine, groceries…"
-              style={{ width: "100%", background: "rgba(255,255,255,.06)", border: "1px solid rgba(255,255,255,.1)", borderRadius: 10, padding: "8px 10px 8px 30px", fontSize: 12, outline: "none", boxSizing: "border-box", fontFamily: "inherit", color: "#EEF0FF" }} />
+              style={{ width: "100%", background: "var(--zd-surface)", border: "1px solid var(--zd-border)", borderRadius: 12, padding: "10px 11px 10px 32px", fontSize: 12.5, outline: "none", boxSizing: "border-box", fontFamily: "inherit", color: "var(--zd-text)" }} />
           </div>
 
           {/* Category cards */}
-          <div style={{ marginBottom: 14 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: C.su, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>What are you looking for?</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: C.su, textTransform: "uppercase", letterSpacing: 1, marginBottom: 9 }}>What are you looking for?</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 9 }}>
               {[
-                { mode: "Food",        icon: "🍽️", label: "Food",        sub: "Restaurants",  bg: "linear-gradient(145deg,rgba(193,68,212,.18),rgba(139,48,201,.08))", border: "rgba(193,68,212,.22)", sh: "rgba(193,68,212,.2)" },
-                { mode: "Pharmacy",    icon: "💊", label: "Pharmacy",    sub: "Pharmacies",   bg: "linear-gradient(145deg,rgba(34,212,124,.15),rgba(34,212,124,.05))",  border: "rgba(34,212,124,.2)",   sh: "rgba(34,212,124,.18)" },
-                { mode: "Supermarket", icon: "🛒", label: "Supermarket", sub: "Supermarkets", bg: "linear-gradient(145deg,rgba(245,158,11,.15),rgba(245,158,11,.05))",  border: "rgba(245,158,11,.2)",   sh: "rgba(245,158,11,.18)" },
+                { mode: "Food",        icon: "🍽️", label: "Food",        sub: "Restaurants",  bg: "linear-gradient(145deg,rgba(193,63,224,.18),rgba(139,48,201,.07))", border: "rgba(193,63,224,.24)", sh: "rgba(193,63,224,.22)" },
+                { mode: "Pharmacy",    icon: "💊", label: "Pharmacy",    sub: "Pharmacies",   bg: "linear-gradient(145deg,rgba(31,214,122,.15),rgba(31,214,122,.05))",  border: "rgba(31,214,122,.22)",  sh: "rgba(31,214,122,.2)" },
+                { mode: "Supermarket", icon: "🛒", label: "Supermarket", sub: "Supermarkets", bg: "linear-gradient(145deg,rgba(245,166,35,.15),rgba(245,166,35,.05))",  border: "rgba(245,166,35,.22)",  sh: "rgba(245,166,35,.2)" },
               ].map(card => (
                 <div key={card.mode} onClick={() => { setMode(card.mode); setCat("All"); setQ(""); }}
-                  style={{ borderRadius: 14, background: card.bg, border: `1px solid ${card.border}`, padding: "14px 10px", cursor: "pointer", textAlign: "center", transition: "all .2s" }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = `0 8px 28px ${card.sh}`; }}
+                  style={{ borderRadius: 16, background: card.bg, border: `1px solid ${card.border}`, padding: "16px 10px", cursor: "pointer", textAlign: "center", transition: "all .2s ease" }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 10px 30px ${card.sh}`; }}
                   onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
-                  <div style={{ fontSize: 28, marginBottom: 6 }}>{card.icon}</div>
+                  <div style={{ fontSize: 29, marginBottom: 7 }}>{card.icon}</div>
                   <div style={{ fontWeight: 800, color: C.tx, fontSize: 12, marginBottom: 2 }}>{card.label}</div>
                   <div style={{ fontSize: 9, color: C.su }}>{card.sub}</div>
                 </div>
@@ -393,13 +423,13 @@ export default function CustomerApp({ tab, isMobile, user, profile, wallet, open
           {/* Featured strip */}
           {!q && featured.length > 0 && (
             <>
-              <div style={{ fontSize: 11, fontWeight: 700, color: C.su, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>⭐ Featured</div>
-              <div style={{ display: "flex", gap: 7, overflowX: "auto", marginBottom: 12, scrollbarWidth: "none" }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: C.su, textTransform: "uppercase", letterSpacing: 1, marginBottom: 9, display: "flex", alignItems: "center", gap: 5 }}><Sparkles size={12} color={C.wa} />Featured</div>
+              <div className="zd-hide-scroll" style={{ display: "flex", gap: 8, overflowX: "auto", marginBottom: 14 }}>
                 {featured.map(s => (
-                  <div key={s.id} onClick={() => { setMode("Food"); setSV(s); }} style={{ flexShrink: 0, width: 108, background: "rgba(255,255,255,.03)", border: "1px solid rgba(193,68,212,.15)", borderRadius: 11, padding: "9px 8px", cursor: "pointer" }}>
-                    <div style={{ fontSize: 28, marginBottom: 5 }}>{s.logo}</div>
-                    <div style={{ fontWeight: 700, color: C.tx, fontSize: 10, lineHeight: 1.2, marginBottom: 2 }}>{s.name}</div>
-                    <div style={{ fontSize: 9, color: C.wa, fontWeight: 700 }}>⭐ {s.rating}</div>
+                  <div key={s.id} onClick={() => { setMode("Food"); setSV(s); }} style={{ flexShrink: 0, width: 112, background: "var(--zd-surface)", border: "1px solid rgba(193,63,224,.18)", borderRadius: 13, padding: "10px 9px", cursor: "pointer" }}>
+                    <div style={{ fontSize: 30, marginBottom: 6 }}>{s.logo}</div>
+                    <div style={{ fontWeight: 700, color: C.tx, fontSize: 10.5, lineHeight: 1.2, marginBottom: 3 }}>{s.name}</div>
+                    <div style={{ fontSize: 9.5, color: C.wa, fontWeight: 700, display: "flex", alignItems: "center", gap: 3 }}><Star size={9} fill={C.wa} color={C.wa} />{s.rating}</div>
                   </div>
                 ))}
               </div>
@@ -407,13 +437,15 @@ export default function CustomerApp({ tab, isMobile, user, profile, wallet, open
           )}
 
           {/* Request rider banner */}
-          <div onClick={() => setReqRider(true)} style={{ display: "flex", alignItems: "center", gap: 8, padding: "9px 11px", borderRadius: 11, background: "rgba(255,107,53,.07)", border: "1px solid rgba(255,107,53,.18)", cursor: "pointer" }}>
-            <span style={{ fontSize: 18 }}>🎯</span>
+          <div onClick={() => setReqRider(true)} style={{ display: "flex", alignItems: "center", gap: 9, padding: "11px 13px", borderRadius: 14, background: "rgba(255,107,53,.07)", border: "1px solid rgba(255,107,53,.2)", cursor: "pointer", transition: "transform .15s ease" }}
+            onMouseEnter={e => e.currentTarget.style.transform = "translateY(-1px)"}
+            onMouseLeave={e => e.currentTarget.style.transform = "none"}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,107,53,.16)", display: "flex", alignItems: "center", justifyContent: "center", color: "#FF6B35", flexShrink: 0 }}><Target size={17} /></div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 700, color: C.tx, fontSize: 12 }}>Request a Specific Rider</div>
-              <div style={{ color: C.su, fontSize: 10, marginTop: 1 }}>Pick your rider — they quote their price</div>
+              <div style={{ fontWeight: 700, color: C.tx, fontSize: 12.5 }}>Request a Specific Rider</div>
+              <div style={{ color: C.su, fontSize: 10.5, marginTop: 1 }}>Pick your rider — they quote their price</div>
             </div>
-            <span style={{ fontSize: 9, color: "#FF6B35", fontWeight: 700, border: "1px solid rgba(255,107,53,.28)", borderRadius: 7, padding: "2px 6px" }}>New ⚡</span>
+            <span style={{ fontSize: 9, color: "#FF6B35", fontWeight: 700, border: "1px solid rgba(255,107,53,.32)", borderRadius: 8, padding: "3px 7px" }}>New ⚡</span>
           </div>
           {showReqRider && <RequestRiderModal onClose={() => setReqRider(false)} />}
         </div>
@@ -423,43 +455,42 @@ export default function CustomerApp({ tab, isMobile, user, profile, wallet, open
 
   // ── ORDERS TAB ──────────────────────────────────────────────
   if (tab === 2) {
-    const SM = { pending:{ color:C.wa,label:"Pending",icon:"⏳"}, confirmed:{color:C.ok,label:"Confirmed",icon:"✅"}, preparing:{color:C.ac,label:"Preparing",icon:"👨‍🍳"}, ready:{color:C.ok,label:"Ready",icon:"📦"}, assigned:{color:C.ac,label:"Rider Found",icon:"🏍️"}, picked_up:{color:C.ok,label:"Picked Up",icon:"✅"}, delivering:{color:C.ac,label:"On the Way",icon:"🏍️"}, delivered:{color:C.ok,label:"Delivered",icon:"🎉"}, cancelled:{color:C.er,label:"Cancelled",icon:"❌"} };
     return (
       <div style={{ padding: P, paddingBottom: 16 }}>
         <SH title="My Orders" sub="Live delivery tracking" />
         {ordersHook.loading && <div style={{ textAlign: "center", padding: "40px", color: C.su }}>Loading orders…</div>}
         {!ordersHook.loading && ordersHook.orders.length === 0 && (
           <div style={{ textAlign: "center", padding: "60px 20px" }}>
-            <div style={{ fontSize: 48, marginBottom: 12 }}>📦</div>
+            <div style={{ fontSize: 44, marginBottom: 12, opacity: .55 }}>📦</div>
             <div style={{ fontWeight: 700, color: C.tx, fontSize: 16, marginBottom: 6 }}>No orders yet</div>
             <div style={{ color: C.su, fontSize: 12 }}>Your orders will appear here once placed</div>
           </div>
         )}
         {ordersHook.orders.map(o => {
-          const st = SM[o.status] ?? { color: C.su, label: o.status, icon: "📦" };
+          const st = statusMeta(o.status);
           return (
-            <div key={o.id} style={{ ...gl(), borderRadius: 13, padding: "11px", marginBottom: 8 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 9 }}>
-                <div style={{ width: 40, height: 40, borderRadius: 11, background: `${C.ac}12`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 19, flexShrink: 0 }}>{o.stores?.logo ?? "🛍️"}</div>
+            <div key={o.id} style={{ ...gl(), borderRadius: 15, padding: "12px", marginBottom: 9 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                <div style={{ width: 42, height: 42, borderRadius: 12, background: `${C.ac}14`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{o.stores?.logo ?? "🛍️"}</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, color: C.tx, fontSize: 13 }}>{o.stores?.name ?? "Store"}</div>
-                  <div style={{ fontSize: 10, color: C.su, marginTop: 1 }}>{o.order_items?.map(i => `${i.name} ×${i.quantity}`).join(", ")}</div>
+                  <div style={{ fontWeight: 700, color: C.tx, fontSize: 13.5 }}>{o.stores?.name ?? "Store"}</div>
+                  <div style={{ fontSize: 10.5, color: C.su, marginTop: 1 }}>{o.order_items?.map(i => `${i.name} ×${i.quantity}`).join(", ")}</div>
                 </div>
-                <Pill label={`${st.icon} ${st.label}`} color={st.color} />
+                <Pill label={<span style={{ display: "flex", alignItems: "center", gap: 4 }}><st.Icon size={11} strokeWidth={2.4} />{st.label}</span>} color={st.color} />
               </div>
               {/* Delivery code */}
               {o.status === "delivering" && (
-                <div style={{ background: "rgba(245,158,11,.1)", border: "1px solid rgba(245,158,11,.25)", borderRadius: 8, padding: "7px 10px", marginBottom: 8, display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: 16 }}>🔑</span>
+                <div style={{ background: "rgba(245,166,35,.1)", border: "1px solid rgba(245,166,35,.28)", borderRadius: 10, padding: "8px 11px", marginBottom: 9, display: "flex", alignItems: "center", gap: 9 }}>
+                  <div style={{ width: 30, height: 30, borderRadius: 9, background: "rgba(245,166,35,.18)", display: "flex", alignItems: "center", justifyContent: "center", color: C.wa, flexShrink: 0 }}><KeyRound size={15} /></div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 8, color: C.wa, fontWeight: 700, letterSpacing: 1 }}>DELIVERY CODE</div>
-                    <div style={{ fontSize: 22, fontWeight: 900, color: C.wa, letterSpacing: 8, marginTop: 1 }}>{o.order_code}</div>
+                    <div style={{ fontSize: 8.5, color: C.wa, fontWeight: 700, letterSpacing: 1 }}>DELIVERY CODE</div>
+                    <div className="zd-tabular" style={{ fontSize: 23, fontWeight: 900, color: C.wa, letterSpacing: 8, marginTop: 1 }}>{o.order_code}</div>
                   </div>
                   <div style={{ fontSize: 9, color: C.su, maxWidth: 80, lineHeight: 1.4, textAlign: "right" }}>Show to rider on arrival</div>
                 </div>
               )}
               <div style={{ display: "flex", gap: 8 }}>
-                <div style={{ fontSize: 12, color: C.ac, fontWeight: 700 }}>₦{(o.total / 100).toLocaleString()}</div>
+                <div className="zd-tabular" style={{ fontSize: 12.5, color: C.ac, fontWeight: 700 }}>₦{(o.total / 100).toLocaleString()}</div>
                 <span style={{ color: C.su, fontSize: 11 }}>· {new Date(o.created_at).toLocaleDateString("en-NG")}</span>
               </div>
             </div>

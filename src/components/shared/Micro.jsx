@@ -1,76 +1,95 @@
 import React, { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronDown } from "lucide-react";
 import {
   AreaChart, Area, XAxis, Tooltip, ResponsiveContainer,
 } from "recharts";
-import { C, G, IS } from "../../constants";
-import { fmt, gl } from "../../utils";
+import { C, G } from "../../styles/tokens";
+import { gl } from "../../styles/glass";
+import { fmt } from "../../utils";
 
 export const Pill = ({ label, color }) => (
   <span style={{
+    display: "inline-flex", alignItems: "center", gap: 5,
     background: `${color}1A`, color,
     border: `1px solid ${color}30`,
-    borderRadius: 20, padding: "2px 7px",
-    fontSize: 10, fontWeight: 700, whiteSpace: "nowrap",
-  }}>{label}</span>
+    borderRadius: 20, padding: "3px 9px 3px 7px",
+    fontSize: 10.5, fontWeight: 700, whiteSpace: "nowrap",
+    letterSpacing: .1,
+  }}>
+    <span style={{ width: 5, height: 5, borderRadius: "50%", background: color, boxShadow: `0 0 6px ${color}` }} />
+    {label}
+  </span>
 );
 
 export const Tog = ({ on, tg, color = C.ok }) => (
-  <div onClick={tg} style={{
-    width: 44, height: 24, borderRadius: 20,
-    background: on ? color : "rgba(255,255,255,.12)",
-    cursor: "pointer", position: "relative",
-    transition: "background .2s", flexShrink: 0,
-    boxShadow: on ? `0 0 12px ${color}60` : "none",
-  }}>
+  <div onClick={tg} role="switch" aria-checked={on} tabIndex={0}
+    onKeyDown={e => (e.key === "Enter" || e.key === " ") && tg()}
+    style={{
+      width: 46, height: 26, borderRadius: 20,
+      background: on ? color : "var(--zd-surface-hover)",
+      border: `1px solid ${on ? color : "var(--zd-border)"}`,
+      cursor: "pointer", position: "relative",
+      transition: "background .22s ease, border-color .22s ease",
+      flexShrink: 0, boxShadow: on ? `0 0 14px ${color}55` : "none",
+      boxSizing: "border-box",
+    }}>
     <div style={{
-      position: "absolute", top: 2, left: on ? 22 : 2,
+      position: "absolute", top: 2, left: on ? 21 : 2,
       width: 20, height: 20, borderRadius: "50%",
-      background: "#fff", transition: "left .2s",
-      boxShadow: "0 1px 4px rgba(0,0,0,.4)",
+      background: "#fff", transition: "left .22s cubic-bezier(.34,1.4,.64,1)",
+      boxShadow: "0 2px 6px rgba(0,0,0,.35)",
     }} />
   </div>
 );
 
 export const SH = ({ title, sub, right }) => (
-  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 7 }}>
+  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 9 }}>
     <div>
-      <div style={{ fontSize: 14, fontWeight: 800, color: C.tx }}>{title}</div>
-      {sub && <div style={{ fontSize: 11, color: C.su, marginTop: 1 }}>{sub}</div>}
+      <div style={{ fontSize: 14.5, fontWeight: 800, color: C.tx, letterSpacing: -.2 }}>{title}</div>
+      {sub && <div style={{ fontSize: 11, color: C.su, marginTop: 2 }}>{sub}</div>}
     </div>
     {right || null}
   </div>
 );
 
-export const SC = ({ icon, label, value, color = C.ac, sub, onClick }) => (
-  <div onClick={onClick} style={{
-    ...gl(), borderRadius: 11, padding: "8px 10px",
-    flex: 1, minWidth: 70, cursor: onClick ? "pointer" : "default",
-  }}>
-    <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-      <div style={{
-        width: 24, height: 24, borderRadius: 7,
-        background: `${color}1A`, display: "flex",
-        alignItems: "center", justifyContent: "center",
-        color, flexShrink: 0, fontSize: 12,
-      }}>{icon}</div>
-      <span style={{ color: C.su, fontSize: 10, fontWeight: 600 }}>{label}</span>
+export const SC = ({ icon, label, value, color = C.ac, sub, onClick }) => {
+  const [h, sh] = useState(false);
+  return (
+    <div onClick={onClick}
+      onMouseEnter={() => sh(true)} onMouseLeave={() => sh(false)}
+      style={{
+        ...gl(), borderRadius: 13, padding: "10px 11px",
+        flex: 1, minWidth: 76, cursor: onClick ? "pointer" : "default",
+        transition: "transform .16s ease, box-shadow .16s ease, border-color .16s ease",
+        transform: h && onClick ? "translateY(-2px)" : "none",
+        borderColor: h ? `${color}35` : undefined,
+      }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 7 }}>
+        <div style={{
+          width: 25, height: 25, borderRadius: 8,
+          background: `${color}16`, border: `1px solid ${color}26`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          color, flexShrink: 0, fontSize: 12,
+        }}>{icon}</div>
+        <span style={{ color: C.su, fontSize: 10, fontWeight: 600, letterSpacing: .1 }}>{label}</span>
+      </div>
+      <div className="zd-tabular" style={{ fontSize: 17.5, fontWeight: 800, color: C.tx, lineHeight: 1, letterSpacing: -.3 }}>{value}</div>
+      {sub && <div style={{ fontSize: 10, color: C.su, marginTop: 3 }}>{sub}</div>}
     </div>
-    <div style={{ fontSize: 17, fontWeight: 800, color: C.tx, lineHeight: 1 }}>{value}</div>
-    {sub && <div style={{ fontSize: 10, color: C.su, marginTop: 2 }}>{sub}</div>}
-  </div>
-);
+  );
+};
 
 export const TR = ({ val, set }) => (
-  <div style={{ display: "flex", gap: 3 }}>
+  <div style={{ display: "flex", gap: 3, background: "var(--zd-surface)", borderRadius: 20, padding: 3, border: "1px solid var(--zd-border)" }}>
     {["7d", "1m", "3m", "6m", "1y"].map(k => (
       <button key={k} onClick={() => set(k)} style={{
-        padding: "3px 8px", borderRadius: 20,
-        border: `1px solid ${val === k ? C.ac + "50" : "rgba(255,255,255,.12)"}`,
-        background: val === k ? `${C.ac}18` : "transparent",
-        color: val === k ? C.ac : "rgba(255,255,255,.38)",
-        fontSize: 9, fontWeight: val === k ? 700 : 500,
-        cursor: "pointer", fontFamily: "inherit", transition: "all .13s",
+        padding: "4px 9px", borderRadius: 20,
+        border: "none",
+        background: val === k ? G : "transparent",
+        color: val === k ? "#fff" : "var(--zd-text-dim)",
+        fontSize: 9, fontWeight: val === k ? 700 : 600,
+        cursor: "pointer", fontFamily: "inherit", transition: "all .15s ease",
+        boxShadow: val === k ? "0 2px 10px rgba(193,63,224,.35)" : "none",
       }}>{k.toUpperCase()}</button>
     ))}
   </div>
@@ -79,77 +98,95 @@ export const TR = ({ val, set }) => (
 export const CTip = ({ active, payload, label, color = C.ac }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div style={{ ...gl(), borderRadius: 9, padding: "6px 10px" }}>
-      <div style={{ fontSize: 9, color: C.su }}>{label}</div>
-      <div style={{ fontSize: 12, fontWeight: 800, color }}>{fmt(payload[0].value)}</div>
+    <div style={{ ...gl(), borderRadius: 10, padding: "7px 11px" }}>
+      <div style={{ fontSize: 9, color: C.su, marginBottom: 1 }}>{label}</div>
+      <div className="zd-tabular" style={{ fontSize: 12.5, fontWeight: 800, color }}>{fmt(payload[0].value)}</div>
     </div>
   );
 };
 
 export const Back = ({ onClick }) => (
   <button onClick={onClick} style={{
-    background: "rgba(255,255,255,.06)",
-    border: "1px solid rgba(255,255,255,.1)",
-    cursor: "pointer", width: 30, height: 30, borderRadius: 9,
+    background: "var(--zd-surface)",
+    border: "1px solid var(--zd-border)",
+    cursor: "pointer", width: 32, height: 32, borderRadius: 10,
     display: "flex", alignItems: "center", justifyContent: "center",
-    color: C.su, flexShrink: 0, transition: "background .14s",
+    color: C.su, flexShrink: 0, transition: "background .15s ease, color .15s ease, transform .15s ease",
   }}
-    onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,.1)"}
-    onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,.06)"}>
-    <ArrowLeft size={14} />
+    onMouseEnter={e => { e.currentTarget.style.background = "var(--zd-surface-hover)"; e.currentTarget.style.color = C.tx; }}
+    onMouseLeave={e => { e.currentTarget.style.background = "var(--zd-surface)"; e.currentTarget.style.color = C.su; }}
+    onMouseDown={e => e.currentTarget.style.transform = "scale(.92)"}
+    onMouseUp={e => e.currentTarget.style.transform = "scale(1)"}>
+    <ArrowLeft size={15} />
   </button>
 );
 
 export const FI = ({ label, val, set, ph, type = "text", opts }) => (
-  <div style={{ marginBottom: 8 }}>
+  <div style={{ marginBottom: 10 }}>
     <div style={{
-      fontSize: 9, color: C.su, fontWeight: 700,
-      textTransform: "uppercase", letterSpacing: 1, marginBottom: 3,
+      fontSize: 9.5, color: "var(--zd-text-faint)", fontWeight: 700,
+      textTransform: "uppercase", letterSpacing: 1.1, marginBottom: 5,
     }}>{label}</div>
     {opts
       ? (
-        <select value={val} onChange={e => set(e.target.value)} style={{ ...IS }}
-          onFocus={e => e.target.style.borderColor = C.ac + "70"}
-          onBlur={e => e.target.style.borderColor = "rgba(255,255,255,.15)"}>
-          {opts.map(o => <option key={o} value={o}>{o}</option>)}
-        </select>
+        <div style={{ position: "relative" }}>
+          <select value={val} onChange={e => set(e.target.value)} style={{ ...IS_LOCAL, appearance: "none", cursor: "pointer" }}
+            onFocus={e => { e.target.style.borderColor = "var(--zd-accent)"; e.target.style.boxShadow = "0 0 0 3px var(--zd-glow)"; }}
+            onBlur={e => { e.target.style.borderColor = "var(--zd-border)"; e.target.style.boxShadow = "none"; }}>
+            {opts.map(o => <option key={o} value={o}>{o}</option>)}
+          </select>
+          <ChevronDown size={14} color="var(--zd-text-faint)" style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
+        </div>
       ) : (
         <input type={type} value={val} onChange={e => set(e.target.value)}
-          placeholder={ph} style={{ ...IS }}
-          onFocus={e => e.target.style.borderColor = C.ac + "70"}
-          onBlur={e => e.target.style.borderColor = "rgba(255,255,255,.15)"} />
+          placeholder={ph} style={IS_LOCAL}
+          onFocus={e => { e.target.style.borderColor = "var(--zd-accent)"; e.target.style.boxShadow = "0 0 0 3px var(--zd-glow)"; }}
+          onBlur={e => { e.target.style.borderColor = "var(--zd-border)"; e.target.style.boxShadow = "none"; }} />
       )}
   </div>
 );
 
+const IS_LOCAL = {
+  width: "100%", background: "var(--zd-surface)",
+  border: "1px solid var(--zd-border)", borderRadius: 11,
+  padding: "10px 13px", fontSize: 12.5, outline: "none",
+  boxSizing: "border-box", fontFamily: "inherit", color: "var(--zd-text)",
+  transition: "border-color .16s ease, box-shadow .16s ease",
+};
+
 export function Btn({ children, onClick, v = "p", sm, full, disabled, sx = {} }) {
   const [h, sh] = useState(false);
+  const [pressed, sp] = useState(false);
   const V = {
-    p:    { bg: h ? "linear-gradient(135deg,#D055E6,#9635CE)" : G,  fg: "#fff",                  br: "none",                          bs: "0 4px 18px rgba(193,68,212,.25)" },
-    g:    { bg: "transparent",                                        fg: "rgba(255,255,255,.5)",  br: "1px solid rgba(255,255,255,.15)", bs: "none" },
-    o:    { bg: h ? "rgba(193,68,212,.16)" : "rgba(193,68,212,.07)", fg: C.ac,                    br: "1px solid rgba(193,68,212,.25)", bs: "none" },
-    ok:   { bg: h ? "rgba(34,212,124,.16)" : "rgba(34,212,124,.07)", fg: C.ok,                    br: "1px solid rgba(34,212,124,.25)", bs: "none" },
-    warn: { bg: h ? "rgba(245,158,11,.16)" : "rgba(245,158,11,.07)", fg: C.wa,                    br: "1px solid rgba(245,158,11,.25)", bs: "none" },
-    zap:  { bg: h ? "linear-gradient(135deg,#FF8C5A,#D055E6)" : "linear-gradient(135deg,#FF6B35,#C144D4)", fg: "#fff", br: "none",     bs: "0 4px 18px rgba(255,107,53,.25)" },
-    d:    { bg: "rgba(239,68,68,.08)",                                fg: C.er,                    br: "1px solid rgba(239,68,68,.2)",  bs: "none" },
-    ghost:{ bg: h ? "rgba(255,255,255,.08)" : "rgba(255,255,255,.04)", fg: "rgba(255,255,255,.55)", br: "1px solid rgba(255,255,255,.12)", bs: "none" },
+    p:    { bg: h ? "linear-gradient(135deg,#D862E8,#9A3ED6)" : G,   fg: "#fff",                 br: "1px solid transparent",                bs: "0 6px 22px rgba(193,63,224,.32)" },
+    g:    { bg: "transparent",                                        fg: "var(--zd-text-dim)",   br: "1px solid var(--zd-border-strong)",    bs: "none" },
+    o:    { bg: h ? "rgba(193,63,224,.18)" : "rgba(193,63,224,.08)", fg: "var(--zd-accent)",     br: "1px solid rgba(193,63,224,.28)",       bs: "none" },
+    ok:   { bg: h ? "rgba(31,214,122,.18)" : "rgba(31,214,122,.08)", fg: "var(--zd-success)",    br: "1px solid rgba(31,214,122,.28)",       bs: "none" },
+    warn: { bg: h ? "rgba(245,166,35,.18)" : "rgba(245,166,35,.08)", fg: "var(--zd-warning)",    br: "1px solid rgba(245,166,35,.28)",       bs: "none" },
+    zap:  { bg: h ? "linear-gradient(135deg,#FF9D6E,#D862E8)" : "linear-gradient(135deg,#FF6B35,#C13FE0)", fg: "#fff", br: "1px solid transparent", bs: "0 6px 22px rgba(255,107,53,.3)" },
+    d:    { bg: "rgba(255,77,94,.09)",                                fg: "var(--zd-danger)",     br: "1px solid rgba(255,77,94,.24)",        bs: "none" },
+    ghost:{ bg: h ? "var(--zd-surface-hover)" : "var(--zd-surface)",   fg: "var(--zd-text-dim)",   br: "1px solid var(--zd-border)",           bs: "none" },
   };
   const vv = V[v] || V.p;
   return (
-    <button onClick={onClick} onMouseEnter={() => sh(true)} onMouseLeave={() => sh(false)}
+    <button onClick={onClick}
+      onMouseEnter={() => sh(true)} onMouseLeave={() => { sh(false); sp(false); }}
+      onMouseDown={() => sp(true)} onMouseUp={() => sp(false)}
       disabled={disabled}
       style={{
-        display: "inline-flex", alignItems: "center", gap: 5, justifyContent: "center",
-        padding: sm ? "5px 10px" : "8px 14px",
-        fontSize: sm ? 11 : 12, fontWeight: 700, borderRadius: 9,
+        display: "inline-flex", alignItems: "center", gap: 6, justifyContent: "center",
+        padding: sm ? "6px 12px" : "9.5px 16px",
+        fontSize: sm ? 11.5 : 12.5, fontWeight: 700, borderRadius: 10,
         cursor: disabled ? "not-allowed" : "pointer",
-        transition: "all .16s", whiteSpace: "nowrap",
+        transition: "transform .14s ease, box-shadow .16s ease, background .16s ease",
         border: vv.br,
-        background: disabled ? "rgba(255,255,255,.04)" : vv.bg,
-        color: disabled ? "rgba(255,255,255,.25)" : vv.fg,
-        boxShadow: vv.bs, opacity: disabled ? 0.55 : 1,
+        background: disabled ? "var(--zd-surface)" : vv.bg,
+        color: disabled ? "var(--zd-text-faint)" : vv.fg,
+        boxShadow: disabled ? "none" : (h ? vv.bs : "none"),
+        opacity: disabled ? .5 : 1,
+        transform: !disabled && pressed ? "scale(.97)" : (!disabled && h ? "translateY(-1px)" : "none"),
         ...(full ? { width: "100%", boxSizing: "border-box" } : {}),
-        fontFamily: "inherit", ...sx,
+        fontFamily: "inherit", letterSpacing: .1, ...sx,
       }}>
       {children}
     </button>
@@ -159,23 +196,23 @@ export function Btn({ children, onClick, v = "p", sm, full, disabled, sx = {} })
 export function MiniChart({ data, color, range, setRange, title }) {
   const gradId = `mcg${color.replace(/[^a-z0-9]/gi, "")}`;
   return (
-    <div style={{ ...gl(), borderRadius: 15, padding: "13px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+    <div style={{ ...gl(), borderRadius: 16, padding: "14px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
         <div style={{ fontWeight: 700, color: C.tx, fontSize: 13 }}>{title || "📊 Activity"}</div>
         <TR val={range} set={setRange} />
       </div>
-      <div style={{ height: 95 }}>
+      <div style={{ height: 98 }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 4, right: 2, left: 2, bottom: 0 }}>
             <defs>
               <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={color} stopOpacity={0.3} />
+                <stop offset="5%" stopColor={color} stopOpacity={0.32} />
                 <stop offset="95%" stopColor={color} stopOpacity={0} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="l" tick={{ fill: "rgba(255,255,255,.35)", fontSize: 8 }} axisLine={false} tickLine={false} />
+            <XAxis dataKey="l" tick={{ fill: "var(--zd-text-faint)", fontSize: 8 }} axisLine={false} tickLine={false} />
             <Tooltip content={(p) => <CTip {...p} color={color} />} />
-            <Area type="monotone" dataKey="v" stroke={color} strokeWidth={2} fill={`url(#${gradId})`} />
+            <Area type="monotone" dataKey="v" stroke={color} strokeWidth={2.25} fill={`url(#${gradId})`} />
           </AreaChart>
         </ResponsiveContainer>
       </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { CSS, C } from './constants';
+import { CSS, C } from './styles/tokens';
+import { ThemeProvider } from './styles/ThemeContext';
 import { useAuth }          from './hooks/useAuth';
 import { useWallet }        from './hooks/useWallet';
 import { useChat }          from './hooks/useChat';
@@ -26,7 +27,7 @@ function LoadingScreen() {
   );
 }
 
-export default function App() {
+function AppInner() {
   const { user, profile, loading: authLoading, signOut, createProfile } = useAuth();
 
   const [pendingRole,       setPendingRole]      = useState(null);
@@ -193,5 +194,16 @@ export default function App() {
         {activeRole === 'store'    && <StoreApp    tab={tab} {...commonProps} storeHook={storeHook} currentAttendant={currentAttendant} isStoreAdmin={isStoreAdmin} />}
       </AppShell>
     </>
+  );
+}
+
+// Wrapping here (rather than editing every early-return above) guarantees
+// every screen — loading splash, role picker, auth gate, and the app itself
+// — has theme variables available, with the original component untouched.
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppInner />
+    </ThemeProvider>
   );
 }

@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { MessageCircle, Bell, CheckCircle, X, Send, Camera, ArrowLeft, Moon, Sun } from "lucide-react";
+import { MessageCircle, Bell, CheckCircle, X, Send, Camera, ArrowLeft, Moon, Sun, MapPin } from "lucide-react";
 import { C, G, GZ, CSS } from "../../constants";
 import { RC } from "../../data";
 import { ts } from "../../utils";
 import { useTheme } from "../../styles/ThemeContext";
+import { HubPanel } from "../shared/HubPanel";
 
 // ─── CHAT PANEL ───────────────────────────────────────────────
 export function ChatPanel({ chat, userId, onClose, isMobile, jumpTo, setJumpTo }) {
@@ -239,15 +240,17 @@ function RoleDrop({ current, onSelect, onClose }) {
 }
 
 // ─── APP SHELL ────────────────────────────────────────────────
-export default function AppShell({ role, tab, setTab, chat, notifs, showChat, setShowChat, showNotif, setShowNotif, chatJump, setChatJump, onRoleSelect, isMobile, userId, children }) {
+export default function AppShell({ role, tab, setTab, chat, notifs, showChat, setShowChat, showNotif, setShowNotif, chatJump, setChatJump, onRoleSelect, isMobile, userId, children, hubsHook }) {
   const [showDrop, setDrop] = useState(false);
   const [hov,      setHov]  = useState(null);
+  const [chatMode, setChatMode] = useState("chat"); // "chat" or "hub" for customer
 
   const nav    = RC[role].nav;
   const rc     = RC[role].color;
   const ri     = RC[role].icon;
   const rl     = RC[role].label;
   const { theme, toggleTheme } = useTheme();
+
 
   const tChat  = () => { setShowChat(p => { const n = !p; if (n) setShowNotif(false); return n; }); };
   const tNotif = () => { setShowNotif(p => { const n = !p; if (n) setShowChat(false); return n; }); };
@@ -273,7 +276,7 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
   );
 
   if (isMobile) return (
-    <div style={{ minHeight: "100vh", background: C.bg, color: C.tx, fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", paddingTop: 48, paddingBottom: 58 }}>
+    <div style={{ minHeight: "100vh", background: C.bg, color: C.tx, fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", paddingTop: 48, paddingBottom: 70 }}>
       <style>{`${CSS}body{overflow-x:hidden}`}</style>
       <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: 48, background: "rgba(6,6,15,.97)", backdropFilter: "blur(22px)", borderBottom: "1px solid rgba(255,255,255,.06)", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px", zIndex: 200 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
@@ -290,21 +293,75 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
         </div>
       </div>
       {children}
-      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, height: 58, background: "rgba(9,9,28,.97)", backdropFilter: "blur(22px)", borderTop: "1px solid rgba(255,255,255,.08)", display: "flex", alignItems: "center", zIndex: 200 }}>
+      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, height: 66, background: "linear-gradient(180deg, rgba(9,9,28,.7) 0%, rgba(9,9,28,.97) 100%)", backdropFilter: "blur(22px)", borderTop: "1px solid rgba(255,255,255,.1)", display: "flex", alignItems: "center", zIndex: 200, paddingBottom: 4 }}>
         {nav.map(({ I, l }, i) => {
           const active = tab === i;
           return (
-            <div key={i} onClick={() => setTab(i)} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2, cursor: "pointer", padding: "7px 0", color: active ? rc : "rgba(255,255,255,.42)", transition: "color .16s" }}>
-              <div style={{ position: "relative", width: 34, height: 26, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {active && <div style={{ position: "absolute", inset: 0, borderRadius: 9, background: `${rc}1C` }} />}
-                <I size={18} style={{ position: "relative", zIndex: 1 }} />
+            <div key={i} onClick={() => setTab(i)} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3, cursor: "pointer", padding: "8px 4px", color: active ? rc : "rgba(255,255,255,.45)", transition: "all .18s ease", transform: active ? "scale(1.08)" : "scale(1)" }}>
+              <div style={{ position: "relative", width: 38, height: 32, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 10, background: active ? `${rc}15` : "transparent", transition: "all .15s" }}>
+                {active && <div style={{ position: "absolute", inset: 0, borderRadius: 10, background: `${rc}08`, border: `1.5px solid ${rc}35` }} />}
+                <I size={20} style={{ position: "relative", zIndex: 1, fontWeight: active ? 800 : 600 }} />
               </div>
-              <span style={{ fontSize: 9, fontWeight: active ? 700 : 500 }}>{l}</span>
+              <span style={{ fontSize: 9.5, fontWeight: active ? 800 : 600, letterSpacing: 0.2 }}>{l}</span>
             </div>
           );
         })}
       </div>
-      {showChat  && <ChatPanel  chat={chat} userId={userId} onClose={() => setShowChat(false)}  isMobile jumpTo={chatJump}  setJumpTo={setChatJump} />}
+      {showChat  && (
+        <>
+          {role === "customer" && hubsHook && (
+            <div style={{ position: "fixed", top: 0, right: isMobile ? 0 : sidebarW, width: isMobile ? "100%" : 330, height: 48, background: "rgba(9,9,28,.95)", backdropFilter: "blur(22px)", borderBottom: "1px solid rgba(255,255,255,.08)", display: "flex", alignItems: "center", gap: 4, padding: "0 8px", zIndex: 801 }}>
+              <button
+                onClick={() => setChatMode("chat")}
+                style={{
+                  flex: 1,
+                  height: 32,
+                  borderRadius: 8,
+                  background: chatMode === "chat" ? `${C.ac}18` : "transparent",
+                  border: chatMode === "chat" ? `1px solid ${C.ac}40` : "1px solid transparent",
+                  color: chatMode === "chat" ? C.ac : "rgba(255,255,255,.5)",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  transition: "all .15s",
+                }}
+              >
+                💬 Chat
+              </button>
+              <button
+                onClick={() => setChatMode("hub")}
+                style={{
+                  flex: 1,
+                  height: 32,
+                  borderRadius: 8,
+                  background: chatMode === "hub" ? `${C.ac}18` : "transparent",
+                  border: chatMode === "hub" ? `1px solid ${C.ac}40` : "1px solid transparent",
+                  color: chatMode === "hub" ? C.ac : "rgba(255,255,255,.5)",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  transition: "all .15s",
+                }}
+              >
+                🌍 Hub
+              </button>
+            </div>
+          )}
+          {chatMode === "chat" && <ChatPanel chat={chat} userId={userId} onClose={() => setShowChat(false)} isMobile={isMobile} jumpTo={chatJump} setJumpTo={setChatJump} />}
+          {chatMode === "hub" && role === "customer" && hubsHook && (
+            <HubPanel
+              hub={hubsHook.hub}
+              userId={userId}
+              onClose={() => setShowChat(false)}
+              isMobile={isMobile}
+              hubs={hubsHook}
+              isHubMember={hubsHook.hub?.isMember}
+            />
+          )}
+        </>
+      )}
       {showNotif && <NotifPanel notifs={notifs}             onClose={() => setShowNotif(false)} isMobile />}
     </div>
   );
@@ -330,9 +387,10 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
             const active = tab === i, h = hov === i;
             return (
               <div key={i} onClick={() => setTab(i)} onMouseEnter={() => setHov(i)} onMouseLeave={() => setHov(null)}
-                style={{ display: "flex", alignItems: "center", gap: 14, padding: "13px 16px", borderRadius: 14, cursor: "pointer", transition: "all .17s", background: active ? `${rc}1C` : h ? "rgba(255,255,255,.06)" : "transparent", color: active ? rc : h ? "rgba(255,255,255,.85)" : "rgba(255,255,255,.5)", fontWeight: active ? 700 : 500, marginBottom: 5, border: `1px solid ${active ? `${rc}30` : "transparent"}` }}>
-                <I size={21} /><span style={{ fontSize: 14 }}>{l}</span>
-                {active && <div style={{ marginLeft: "auto", width: 7, height: 7, borderRadius: "50%", background: rc, boxShadow: `0 0 8px ${rc}` }} />}
+                style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", borderRadius: 12, cursor: "pointer", transition: "all .18s ease", background: active ? `${rc}18` : h ? "rgba(255,255,255,.08)" : "transparent", color: active ? rc : h ? "rgba(255,255,255,.9)" : "rgba(255,255,255,.6)", fontWeight: active ? 700 : 600, marginBottom: 6, border: `1px solid ${active ? `${rc}35` : h ? "rgba(255,255,255,.12)" : "transparent"}`, boxShadow: active ? `0 8px 24px ${rc}22` : "none" }}>
+                <I size={22} style={{ opacity: active ? 1 : 0.8 }} />
+                <span style={{ fontSize: 14.5 }}>{l}</span>
+                {active && <div style={{ marginLeft: "auto", width: 8, height: 8, borderRadius: "50%", background: rc, boxShadow: `0 0 12px ${rc}` }} />}
               </div>
             );
           })}
@@ -349,9 +407,22 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
       </div>
       <div style={{ flex: 1, marginLeft: sidebarW, display: "flex", flexDirection: "column", minHeight: "100vh", marginRight: (showChat || showNotif) ? 330 : 0, transition: "margin-right .25s" }}>
         <div style={{ position: "sticky", top: 0, height: 60, background: "rgba(9,9,28,.95)", backdropFilter: "blur(22px)", borderBottom: "1px solid #1A1A38", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", zIndex: 50, flexShrink: 0 }}>
-          <div>
-            <div style={{ fontWeight: 800, fontSize: 17, color: C.tx }}>{nav[tab]?.l}</div>
-            <div style={{ fontSize: 10, color: C.su, marginTop: 1 }}>{new Date().toLocaleDateString("en-NG", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div>
+              <div style={{ fontWeight: 800, fontSize: 17, color: C.tx }}>{nav[tab]?.l}</div>
+              <div style={{ fontSize: 10, color: C.su, marginTop: 1 }}>{new Date().toLocaleDateString("en-NG", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</div>
+            </div>
+            {role === "customer" && hubsHook && (
+              <div style={{ marginLeft: 20, paddingLeft: 20, borderLeft: "1px solid rgba(255,255,255,.12)", display: "flex", alignItems: "center", gap: 8 }}>
+                <MapPin size={14} color={C.ac} />
+                <button onClick={() => hubsHook.setRegion(hubsHook.allRegions[(hubsHook.allRegions.indexOf(hubsHook.currentRegion) + 1) % hubsHook.allRegions.length])}
+                  style={{ background: "none", border: "none", cursor: "pointer", fontSize: 12, fontWeight: 600, color: C.ac, fontFamily: "inherit", padding: "4px 8px", borderRadius: 6, transition: "all .15s" }}
+                  onMouseEnter={e => e.currentTarget.style.background = `${C.ac}15`}
+                  onMouseLeave={e => e.currentTarget.style.background = "none"}>
+                  {hubsHook.currentRegion}
+                </button>
+              </div>
+            )}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <Badge icon={<MessageCircle size={16} color={showChat ? C.ac : "rgba(255,255,255,.7)"} />} count={chat.unreadTotal} onClick={tChat} active={showChat} />
@@ -364,7 +435,61 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
         </div>
         <div style={{ flex: 1, overflowY: "auto" }}>{children}</div>
       </div>
-      {showChat  && <ChatPanel  chat={chat} userId={userId} onClose={() => setShowChat(false)}  isMobile={false} jumpTo={chatJump}  setJumpTo={setChatJump} />}
+      {showChat  && (
+        <>
+          {role === "customer" && hubsHook && (
+            <div style={{ position: "fixed", top: 0, right: 0, width: 330, height: 48, background: "rgba(9,9,28,.95)", backdropFilter: "blur(22px)", borderBottom: "1px solid rgba(255,255,255,.08)", display: "flex", alignItems: "center", gap: 4, padding: "0 8px", zIndex: 801 }}>
+              <button
+                onClick={() => setChatMode("chat")}
+                style={{
+                  flex: 1,
+                  height: 32,
+                  borderRadius: 8,
+                  background: chatMode === "chat" ? `${C.ac}18` : "transparent",
+                  border: chatMode === "chat" ? `1px solid ${C.ac}40` : "1px solid transparent",
+                  color: chatMode === "chat" ? C.ac : "rgba(255,255,255,.5)",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  transition: "all .15s",
+                }}
+              >
+                💬 Chat
+              </button>
+              <button
+                onClick={() => setChatMode("hub")}
+                style={{
+                  flex: 1,
+                  height: 32,
+                  borderRadius: 8,
+                  background: chatMode === "hub" ? `${C.ac}18` : "transparent",
+                  border: chatMode === "hub" ? `1px solid ${C.ac}40` : "1px solid transparent",
+                  color: chatMode === "hub" ? C.ac : "rgba(255,255,255,.5)",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  transition: "all .15s",
+                }}
+              >
+                🌍 Hub
+              </button>
+            </div>
+          )}
+          {chatMode === "chat" && <ChatPanel chat={chat} userId={userId} onClose={() => setShowChat(false)} isMobile={false} jumpTo={chatJump} setJumpTo={setChatJump} />}
+          {chatMode === "hub" && role === "customer" && hubsHook && (
+            <HubPanel
+              hub={hubsHook.hub}
+              userId={userId}
+              onClose={() => setShowChat(false)}
+              isMobile={false}
+              hubs={hubsHook}
+              isHubMember={hubsHook.hub?.isMember}
+            />
+          )}
+        </>
+      )}
       {showNotif && <NotifPanel notifs={notifs}             onClose={() => setShowNotif(false)} isMobile={false} />}
     </div>
   );

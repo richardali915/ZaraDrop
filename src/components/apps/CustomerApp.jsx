@@ -8,6 +8,7 @@ import { gl } from "../../styles/glass";
 import { statusMeta } from "../../styles/statusIcons";
 import { useStores }   from "../../hooks/useStores";
 import { useOrders }   from "../../hooks/useOrders";
+import { useHubs }     from "../../hooks/useHubs";
 import { callFn }      from "../../lib/supabase";
 import { Pill, SH, Btn, Tog } from "../shared/Micro";
 import WalletScreen    from "../shared/WalletScreen";

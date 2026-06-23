@@ -7,6 +7,7 @@ import { useChat }          from './hooks/useChat';
 import { useNotifications } from './hooks/useNotifications';
 import { useStore }         from './hooks/useStore';
 import { useRider }         from './hooks/useRider';
+import { useHubs }          from './hooks/useHubs';
 import { subscribeToPush }  from './lib/pushNotifications';
 import RoleSelector     from './components/auth/RoleSelector';
 import AuthGate         from './components/auth/AuthGate';
@@ -101,6 +102,7 @@ function AppInner() {
   const notifs    = useNotifications(user?.id);
   const storeHook = useStore(activeRole === 'store' ? user?.id : null);
   const riderHook = useRider(activeRole === 'rider' ? user?.id : null);
+  const hubsHook  = useHubs(activeRole === 'customer' ? (profile?.customer_profiles?.[0]?.region || 'Wuse II') : null);
 
   const handleRoleSelect = useCallback((role) => {
     // If already signed in and profile has this role, go straight in
@@ -188,6 +190,7 @@ function AppInner() {
         chatJump={chatJump} setChatJump={setChatJump}
         onRoleSelect={handleRoleSelect}
         isMobile={isMobile} userId={user?.id}
+        hubsHook={activeRole === 'customer' ? hubsHook : null}
       >
         {activeRole === 'customer' && <CustomerApp tab={tab} {...commonProps} />}
         {activeRole === 'rider'    && <RiderApp    tab={tab} {...commonProps} riderHook={riderHook} />}

@@ -29,6 +29,15 @@ export const C = {
   surf:     "var(--zd-surface)",
   surfSoft: "var(--zd-surface-soft)",
   surfHov:  "var(--zd-surface-hover)",
+  card:      "var(--zd-card)",
+  cardSoft:  "var(--zd-card-soft)",
+  input:     "var(--zd-input)",
+  inputBorder: "var(--zd-input-border)",
+  inputFocus:  "var(--zd-input-focus)",
+  btnPrimary: "var(--zd-button-primary)",
+  btnPrimaryText: "var(--zd-button-primary-text)",
+  btnSecondary: "var(--zd-button-secondary)",
+  btnDanger: "var(--zd-button-danger)",
   su2:      "var(--zd-text-faint)",
   bdStrong: "var(--zd-border-strong)",
   overlay:  "var(--zd-overlay)",
@@ -40,6 +49,20 @@ export const C = {
   glow:     "var(--zd-glow)",
   shadow:   "var(--zd-shadow)",
   shadowLg: "var(--zd-shadow-lg)",
+};
+
+export const B = {
+  btn:          "var(--zd-button-primary)",
+  btnText:      "var(--zd-button-primary-text)",
+  btnSecondary: "var(--zd-button-secondary)",
+  btnDanger:    "var(--zd-button-danger)",
+  input:        "var(--zd-input)",
+  inputBorder:  "var(--zd-input-border)",
+  inputFocus:   "var(--zd-input-focus)",
+  card:         "var(--zd-card)",
+  cardSoft:     "var(--zd-card-soft)",
+  hover:        "var(--zd-surface-hover)",
+  border:       "var(--zd-border)",
 };
 
 // ── Brand gradients (intentionally theme-stable — vivid on both bg modes,
@@ -76,6 +99,7 @@ export const THEME_VARS = `
   --zd-bg-elevated: #0c0b16;
   --zd-surface: rgba(255,255,255,.04);
   --zd-surface-hover: rgba(255,255,255,.065);
+  --zd-surface-soft: rgba(255,255,255,.03);
   --zd-surface-1: #100f1d;
   --zd-border: rgba(255,255,255,.085);
   --zd-border-strong: rgba(255,255,255,.16);
@@ -92,6 +116,15 @@ export const THEME_VARS = `
   --zd-danger: #FF4D5E;
   --zd-danger-soft: rgba(255,77,94,.16);
   --zd-glow: rgba(193,63,224,.45);
+  --zd-card: rgba(255,255,255,.06);
+  --zd-card-soft: rgba(255,255,255,.1);
+  --zd-button-primary: linear-gradient(135deg,#D24FE3 0%,#C13FE0 60%,#8B30C9 100%);
+  --zd-button-primary-text: #FFFFFF;
+  --zd-button-secondary: rgba(255,255,255,.08);
+  --zd-button-danger: rgba(255,77,94,.16);
+  --zd-input: rgba(255,255,255,.08);
+  --zd-input-border: rgba(255,255,255,.16);
+  --zd-input-focus: rgba(193,63,224,.22);
   --zd-shadow: 0 8px 28px rgba(0,0,0,.40);
   --zd-shadow-lg: 0 24px 70px rgba(0,0,0,.55);
   --zd-overlay: rgba(0,0,0,.92);
@@ -100,6 +133,17 @@ export const THEME_VARS = `
 }
 
 :root[data-zd-theme="light"]{
+  --zd-bg: #F5F4FA;
+  --zd-bg-elevated: #FFFFFF;
+  --zd-surface: rgba(20,18,40,.04);
+  --zd-surface-hover: rgba(20,18,40,.07);
+  --zd-surface-soft: rgba(20,18,40,.02);
+  --zd-surface-1: #FFFFFF;
+  --zd-border: rgba(20,18,40,.10);
+  --zd-border-strong: rgba(20,18,40,.18);
+  --zd-text: #141226;
+  --zd-text-dim: rgba(20,18,38,.58);
+  --zd-text-faint: rgba(20,18,38,.38);
   --zd-accent: #9B2BC4;
   --zd-accent-2: #7A22A8;
   --zd-accent-soft: rgba(155,43,196,.14);
@@ -110,32 +154,18 @@ export const THEME_VARS = `
   --zd-danger: #DB2E45;
   --zd-danger-soft: rgba(219,46,69,.16);
   --zd-glow: rgba(155,43,196,.16);
+  --zd-card: rgba(255,255,255,.9);
+  --zd-card-soft: rgba(20,18,40,.04);
+  --zd-button-primary: linear-gradient(135deg,#9B2BC4 0%,#7A22A8 100%);
+  --zd-button-primary-text: #FFFFFF;
+  --zd-button-secondary: rgba(20,18,40,.06);
+  --zd-button-danger: rgba(219,46,69,.16);
+  --zd-input: #FFFFFF;
+  --zd-input-border: rgba(20,18,40,.10);
+  --zd-input-focus: rgba(155,43,196,.12);
   --zd-shadow: 0 4px 18px rgba(30,20,60,.07);
   --zd-shadow-lg: 0 24px 60px rgba(30,20,60,.13);
   --zd-overlay: rgba(255,255,255,.92);
-  --zd-scrollbar: rgba(20,18,40,.16);
-  color-scheme: light;
-
-  --zd-overlay: rgba(255,255,255,.92);
-
-  --zd-bg: #F5F4FA;
-  --zd-bg-elevated: #FFFFFF;
-  --zd-surface: rgba(20,18,40,.04);
-  --zd-surface-hover: rgba(20,18,40,.07);
-  --zd-surface-1: #FFFFFF;
-  --zd-border: rgba(20,18,40,.10);
-  --zd-border-strong: rgba(20,18,40,.18);
-  --zd-text: #141226;
-  --zd-text-dim: rgba(20,18,38,.58);
-  --zd-text-faint: rgba(20,18,38,.38);
-  --zd-accent: #9B2BC4;
-  --zd-accent-2: #7A22A8;
-  --zd-success: #0E9C61;
-  --zd-warning: #B8740A;
-  --zd-danger: #DB2E45;
-  --zd-glow: rgba(155,43,196,.16);
-  --zd-shadow: 0 4px 18px rgba(30,20,60,.07);
-  --zd-shadow-lg: 0 24px 60px rgba(30,20,60,.13);
   --zd-scrollbar: rgba(20,18,40,.16);
   color-scheme: light;
 }

@@ -5,6 +5,7 @@ import { RC } from "../../data";
 import { ts } from "../../utils";
 import { useTheme } from "../../styles/ThemeContext";
 import { HubPanel } from "../shared/HubPanel";
+import MapPanel from "../shared/MapPanel";
 
 // ─── CHAT PANEL ───────────────────────────────────────────────
 export function ChatPanel({ chat, userId, onClose, isMobile, jumpTo, setJumpTo }) {
@@ -244,6 +245,7 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
   const [showDrop, setDrop] = useState(false);
   const [hov,      setHov]  = useState(null);
   const [chatMode, setChatMode] = useState("chat"); // "chat" or "hub" for customer
+  const [showMap, setShowMap] = useState(false);
 
   const nav    = RC[role].nav;
   const rc     = RC[role].color;
@@ -254,6 +256,8 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
 
   const tChat  = () => { setShowChat(p => { const n = !p; if (n) setShowNotif(false); return n; }); };
   const tNotif = () => { setShowNotif(p => { const n = !p; if (n) setShowChat(false); return n; }); };
+  const tMap = () => { setShowMap(p => { const n = !p; if (n) { setShowChat(false); setShowNotif(false); } return n; }); };
+  const openMapPanel = () => { setShowMap(true); setShowChat(false); setShowNotif(false); };
 
   const Badge = ({ icon, count, onClick, active }) => (
     <div onClick={onClick} style={{ cursor: "pointer", width: 32, height: 32, borderRadius: 9, background: active ? `${C.ac}18` : C.surf, border: `1px solid ${active ? C.ac + "40" : C.bd}`, display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
@@ -290,6 +294,11 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
           <button onClick={toggleTheme} style={{ width: 34, height: 34, borderRadius: 11, border: `1px solid ${C.bd}`, background: C.surf, display: "flex", alignItems: "center", justifyContent: "center", color: C.su, cursor: "pointer" }} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
             {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
           </button>
+          {role === "customer" && hubsHook && (
+            <button onClick={openMapPanel} style={{ width: 34, height: 34, borderRadius: 11, border: `1px solid ${C.bd}`, background: C.surf, display: "flex", alignItems: "center", justifyContent: "center", color: C.su, cursor: "pointer" }} title="Open route planner">
+              <MapPin size={15} />
+            </button>
+          )}
         </div>
       </div>
       {children}
@@ -363,6 +372,7 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
         </>
       )}
       {showNotif && <NotifPanel notifs={notifs}             onClose={() => setShowNotif(false)} isMobile />}
+      {showMap && role === "customer" && hubsHook && <MapPanel region={hubsHook.currentRegion} onClose={() => setShowMap(false)} isMobile={isMobile} />}
     </div>
   );
 
@@ -420,6 +430,12 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
                   onMouseEnter={e => e.currentTarget.style.background = `${C.ac}15`}
                   onMouseLeave={e => e.currentTarget.style.background = "none"}>
                   {hubsHook.currentRegion}
+                </button>
+                <button onClick={openMapPanel}
+                  style={{ background: "none", border: `1px solid ${C.bd}`, cursor: "pointer", fontSize: 12, fontWeight: 600, color: C.tx, fontFamily: "inherit", padding: "4px 9px", borderRadius: 8, transition: "all .15s" }}
+                  onMouseEnter={e => e.currentTarget.style.background = `${C.surfHov}`}
+                  onMouseLeave={e => e.currentTarget.style.background = "none"}>
+                  Open map
                 </button>
               </div>
             )}
@@ -491,6 +507,7 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
         </>
       )}
       {showNotif && <NotifPanel notifs={notifs}             onClose={() => setShowNotif(false)} isMobile={false} />}
+      {showMap && role === "customer" && hubsHook && <MapPanel region={hubsHook.currentRegion} onClose={() => setShowMap(false)} isMobile={isMobile} />}
     </div>
   );
 }

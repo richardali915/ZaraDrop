@@ -25,9 +25,10 @@ const AD_HERO    = [
   { bg:"linear-gradient(135deg,#0A001A,#0C0C1E)", accent:C.ac,  title:"ZP Points",       sub:"Earn 2% back on every order",         cta:"Learn More",  icon:"⭐", type:"promo" },
 ];
 
-export default function CustomerApp({ tab, isMobile, user, profile, wallet, openChat, notifs }) {
+export default function CustomerApp({ tab, setTab, isMobile, user, profile, wallet, openChat, notifs }) {
   const [appMode,       setMode]     = useState(null);
   const [cat,           setCat]      = useState("All");
+  const [showGames,     setShowGames]= useState(false);
   const [q,             setQ]        = useState("");
   const [storeView,     setSV]       = useState(null);
   const [storeMenu,     setSMenu]    = useState([]);
@@ -408,8 +409,10 @@ export default function CustomerApp({ tab, isMobile, user, profile, wallet, open
                 { mode: "Food",        icon: "🍽️", label: "Food",        sub: "Restaurants",  bg: "linear-gradient(145deg,rgba(193,63,224,.18),rgba(139,48,201,.07))", border: "rgba(193,63,224,.24)", sh: "rgba(193,63,224,.22)" },
                 { mode: "Pharmacy",    icon: "💊", label: "Pharmacy",    sub: "Pharmacies",   bg: "linear-gradient(145deg,rgba(31,214,122,.15),rgba(31,214,122,.05))",  border: "rgba(31,214,122,.22)",  sh: "rgba(31,214,122,.2)" },
                 { mode: "Supermarket", icon: "🛒", label: "Supermarket", sub: "Supermarkets", bg: "linear-gradient(145deg,rgba(245,166,35,.15),rgba(245,166,35,.05))",  border: "rgba(245,166,35,.22)",  sh: "rgba(245,166,35,.2)" },
+                { mode: "Supermarket", icon: "🛍️", label: "Local Market", sub: "Nearby shops", bg: "linear-gradient(145deg,rgba(255,107,53,.14),rgba(193,63,224,.06))", border: "rgba(255,107,53,.2)", sh: "rgba(255,107,53,.18)" },
+                { mode: "Supermarket", icon: "🏬", label: "Shops", sub: "Retail stores", bg: "linear-gradient(145deg,rgba(75,85,99,.12),rgba(20,18,40,.08))", border: "rgba(255,255,255,.08)", sh: "rgba(255,255,255,.12)" },
               ].map(card => (
-                <div key={card.mode} onClick={() => { setMode(card.mode); setCat("All"); setQ(""); }}
+                <div key={card.label} onClick={() => { setMode(card.mode); setCat("All"); setQ(""); setTab(1); }}
                   style={{ borderRadius: 16, background: card.bg, border: `1px solid ${card.border}`, padding: "16px 10px", cursor: "pointer", textAlign: "center", transition: "all .2s ease" }}
                   onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = `0 10px 30px ${card.sh}`; }}
                   onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
@@ -438,16 +441,35 @@ export default function CustomerApp({ tab, isMobile, user, profile, wallet, open
           )}
 
           {/* Request rider banner */}
-          <div onClick={() => setReqRider(true)} style={{ display: "flex", alignItems: "center", gap: 9, padding: "11px 13px", borderRadius: 14, background: "rgba(255,107,53,.07)", border: "1px solid rgba(255,107,53,.2)", cursor: "pointer", transition: "transform .15s ease" }}
-            onMouseEnter={e => e.currentTarget.style.transform = "translateY(-1px)"}
-            onMouseLeave={e => e.currentTarget.style.transform = "none"}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(255,107,53,.16)", display: "flex", alignItems: "center", justifyContent: "center", color: "#FF6B35", flexShrink: 0 }}><Target size={17} /></div>
+          <div onClick={() => setShowGames(p => !p)} style={{ display: "flex", alignItems: "center", gap: 9, padding: "14px 14px", borderRadius: 18, background: "rgba(193,63,224,.1)", border: "1px solid rgba(193,63,224,.18)", cursor: "pointer", transition: "transform .15s ease, background .2s" }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.background = "rgba(193,63,224,.14)"; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = "none"; e.currentTarget.style.background = "rgba(193,63,224,.1)"; }}>
+            <div style={{ width: 42, height: 42, borderRadius: 14, background: "rgba(255,255,255,.18)", display: "flex", alignItems: "center", justifyContent: "center", color: C.ac, flexShrink: 0, fontSize: 20 }}>🎮</div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 700, color: C.tx, fontSize: 12.5 }}>Request a Specific Rider</div>
-              <div style={{ color: C.su, fontSize: 10.5, marginTop: 1 }}>Pick your rider — they quote their price</div>
+              <div style={{ fontWeight: 700, color: C.tx, fontSize: 13 }}>Join Daily Games</div>
+              <div style={{ color: C.su, fontSize: 11.5, marginTop: 2 }}>Win rewards for every level you reach — never miss the next tier.</div>
             </div>
-            <span style={{ fontSize: 9, color: "#FF6B35", fontWeight: 700, border: "1px solid rgba(255,107,53,.32)", borderRadius: 8, padding: "3px 7px" }}>New ⚡</span>
+            <span style={{ fontSize: 9, color: C.su, fontWeight: 700, border: "1px solid rgba(255,255,255,.18)", borderRadius: 8, padding: "3px 8px" }}>{showGames ? "Hide" : "Open"}</span>
           </div>
+          {showGames && (
+            <div style={{ marginTop: 12, padding: "14px 14px", borderRadius: 18, background: "var(--zd-card)", border: "1px solid var(--zd-border)", boxShadow: "var(--zd-shadow)" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: C.tx, marginBottom: 10 }}>Daily Game Levels</div>
+              {[
+                { level: 1, reward: "₦500", description: "Reach level one and collect the reward." },
+                { level: 2, reward: "₦1,200", description: "Reach level two and claim the next reward." },
+                { level: 3, reward: "₦2,000", description: "Play every day to keep rewards flowing." },
+              ].map(item => (
+                <div key={item.level} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "10px 0", borderBottom: "1px solid var(--zd-border)", color: C.tx }}>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 700 }}>Level {item.level}</div>
+                    <div style={{ fontSize: 10.5, color: C.su, marginTop: 2 }}>{item.description}</div>
+                  </div>
+                  <div style={{ fontSize: 12, fontWeight: 800, color: C.ac }}>{item.reward}</div>
+                </div>
+              ))}
+              <div style={{ marginTop: 10, fontSize: 10.5, color: C.su }}>Rewards are earned per level reached, not only the highest target. Stay in the game and collect each milestone.</div>
+            </div>
+          )}
           {showReqRider && <RequestRiderModal onClose={() => setReqRider(false)} />}
         </div>
       </div>

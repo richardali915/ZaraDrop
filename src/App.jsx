@@ -32,7 +32,10 @@ function AppInner() {
   const { user, profile, loading: authLoading, signOut, createProfile } = useAuth();
 
   const [pendingRole,       setPendingRole]      = useState(null);
-  const [activeRole,        setActiveRole]       = useState(null);
+  const [activeRole,        setActiveRole]       = useState(() => {
+    if (typeof window === 'undefined') return null;
+    return window.localStorage.getItem('zaradrop_role');
+  });
   const [tab,               setTab]              = useState(0);
   const [isMobile,          setMobile]           = useState(window.innerWidth < 768);
   const [currentAttendant,  setCurrentAttendant] = useState(null);
@@ -79,6 +82,16 @@ function AppInner() {
       setActiveRole(profile.role);
     }
   }, [authLoading, user, profile, activeRole, pendingRole]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      if (activeRole) window.localStorage.setItem('zaradrop_role', activeRole);
+      else window.localStorage.removeItem('zaradrop_role');
+    } catch (e) {
+      // ignore storage errors
+    }
+  }, [activeRole]);
 
   // Store: attendant check-in
   useEffect(() => {
@@ -136,6 +149,7 @@ function AppInner() {
     setActiveRole(role);
     setPendingRole(null);
     sessionStorage.removeItem('zaradrop_pending_role');
+    try { window.localStorage.setItem('zaradrop_role', role); } catch (e) {}
     setTab(0); setShowChat(false); setShowNotif(false);
   }, [pendingRole, user, profile, createProfile]);
 
@@ -167,7 +181,7 @@ function AppInner() {
     </>
   );
 
-  const commonProps = { isMobile, user, profile, wallet, chat, openChat, notifs, signOut };
+  const commonProps = { isMobile, user, profile, wallet, chat, openChat, notifs, signOut, setTab };
 
   return (
     <>

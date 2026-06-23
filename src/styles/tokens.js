@@ -27,10 +27,16 @@ export const C = {
   // Additive tokens (new — nothing existing reads these, safe to add)
   bg2:      "var(--zd-bg-elevated)",
   surf:     "var(--zd-surface)",
+  surfSoft: "var(--zd-surface-soft)",
   surfHov:  "var(--zd-surface-hover)",
   su2:      "var(--zd-text-faint)",
   bdStrong: "var(--zd-border-strong)",
+  overlay:  "var(--zd-overlay)",
   ac2:      "var(--zd-accent-2)",
+  acSoft:   "var(--zd-accent-soft)",
+  okSoft:   "var(--zd-success-soft)",
+  waSoft:   "var(--zd-warning-soft)",
+  erSoft:   "var(--zd-danger-soft)",
   glow:     "var(--zd-glow)",
   shadow:   "var(--zd-shadow)",
   shadowLg: "var(--zd-shadow-lg)",
@@ -78,17 +84,40 @@ export const THEME_VARS = `
   --zd-text-faint: rgba(244,242,251,.3);
   --zd-accent: #C13FE0;
   --zd-accent-2: #8B30C9;
+  --zd-accent-soft: rgba(193,63,224,.14);
   --zd-success: #1FD67A;
+  --zd-success-soft: rgba(31,214,122,.14);
   --zd-warning: #F5A623;
+  --zd-warning-soft: rgba(245,166,35,.16);
   --zd-danger: #FF4D5E;
+  --zd-danger-soft: rgba(255,77,94,.16);
   --zd-glow: rgba(193,63,224,.45);
   --zd-shadow: 0 8px 28px rgba(0,0,0,.40);
   --zd-shadow-lg: 0 24px 70px rgba(0,0,0,.55);
+  --zd-overlay: rgba(0,0,0,.92);
   --zd-scrollbar: rgba(255,255,255,.14);
   color-scheme: dark;
 }
 
 :root[data-zd-theme="light"]{
+  --zd-accent: #9B2BC4;
+  --zd-accent-2: #7A22A8;
+  --zd-accent-soft: rgba(155,43,196,.14);
+  --zd-success: #0E9C61;
+  --zd-success-soft: rgba(14,156,97,.14);
+  --zd-warning: #B8740A;
+  --zd-warning-soft: rgba(184,116,10,.16);
+  --zd-danger: #DB2E45;
+  --zd-danger-soft: rgba(219,46,69,.16);
+  --zd-glow: rgba(155,43,196,.16);
+  --zd-shadow: 0 4px 18px rgba(30,20,60,.07);
+  --zd-shadow-lg: 0 24px 60px rgba(30,20,60,.13);
+  --zd-overlay: rgba(255,255,255,.92);
+  --zd-scrollbar: rgba(20,18,40,.16);
+  color-scheme: light;
+
+  --zd-overlay: rgba(255,255,255,.92);
+
   --zd-bg: #F5F4FA;
   --zd-bg-elevated: #FFFFFF;
   --zd-surface: rgba(20,18,40,.04);

@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import { MessageCircle, Bell, CheckCircle, X, Send, Camera, ArrowLeft } from "lucide-react";
+import { MessageCircle, Bell, CheckCircle, X, Send, Camera, ArrowLeft, Moon, Sun } from "lucide-react";
 import { C, G, GZ, CSS } from "../../constants";
 import { RC } from "../../data";
 import { ts } from "../../utils";
+import { useTheme } from "../../styles/ThemeContext";
 
 // ─── CHAT PANEL ───────────────────────────────────────────────
 export function ChatPanel({ chat, userId, onClose, isMobile, jumpTo, setJumpTo }) {
@@ -246,6 +247,7 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
   const rc     = RC[role].color;
   const ri     = RC[role].icon;
   const rl     = RC[role].label;
+  const { theme, toggleTheme } = useTheme();
 
   const tChat  = () => { setShowChat(p => { const n = !p; if (n) setShowNotif(false); return n; }); };
   const tNotif = () => { setShowNotif(p => { const n = !p; if (n) setShowChat(false); return n; }); };
@@ -278,10 +280,13 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
           <div style={{ width: 28, height: 28, borderRadius: 8, background: GZ, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13 }}>⚡</div>
           <span style={{ fontWeight: 900, fontSize: 16, background: GZ, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", letterSpacing: -0.5 }}>ZaraDrop</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <RoleTag />
           <Badge icon={<MessageCircle size={15} color={showChat ? C.ac : "rgba(255,255,255,.6)"} />} count={chat.unreadTotal} onClick={tChat} active={showChat} />
           <Badge icon={<Bell size={15} color={showNotif ? C.ac : "rgba(255,255,255,.6)"} />} count={notifs.unread} onClick={tNotif} active={showNotif} />
+          <button onClick={toggleTheme} style={{ width: 34, height: 34, borderRadius: 11, border: "1px solid rgba(255,255,255,.12)", background: "rgba(255,255,255,.06)", display: "flex", alignItems: "center", justifyContent: "center", color: C.su, cursor: "pointer" }} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
+            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+          </button>
         </div>
       </div>
       {children}
@@ -351,6 +356,9 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <Badge icon={<MessageCircle size={16} color={showChat ? C.ac : "rgba(255,255,255,.7)"} />} count={chat.unreadTotal} onClick={tChat} active={showChat} />
             <Badge icon={<Bell size={16} color={showNotif ? C.ac : "rgba(255,255,255,.7)"} />} count={notifs.unread} onClick={tNotif} active={showNotif} />
+            <button onClick={toggleTheme} style={{ width: 38, height: 38, borderRadius: 12, border: "1px solid rgba(255,255,255,.12)", background: "rgba(255,255,255,.05)", display: "flex", alignItems: "center", justifyContent: "center", color: C.su, cursor: "pointer" }} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
             <div style={{ width: 38, height: 38, borderRadius: 12, background: GZ, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 17, cursor: "pointer", boxShadow: "0 3px 16px rgba(255,107,53,.3)" }}>{ri}</div>
           </div>
         </div>

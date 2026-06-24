@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { MessageCircle, Bell, CheckCircle, X, Send, Camera, ArrowLeft, Moon, Sun, MapPin } from "lucide-react";
 import { C, G, GZ, CSS } from "../../constants";
 import { RC } from "../../data";
@@ -8,7 +8,7 @@ import { HubPanel } from "../shared/HubPanel";
 import MapPanel from "../shared/MapPanel";
 
 // ─── CHAT PANEL ───────────────────────────────────────────────
-export function ChatPanel({ chat, userId, onClose, isMobile, jumpTo, setJumpTo }) {
+export function ChatPanel({ chat, userId, onClose, isMobile, jumpTo, setJumpTo, role }) {
   const [activeConv, setActiveConv] = useState(jumpTo || null);
   const [messages,   setMessages]   = useState([]);
   const [inp,        setInp]        = useState("");
@@ -16,6 +16,10 @@ export function ChatPanel({ chat, userId, onClose, isMobile, jumpTo, setJumpTo }
   const endRef = useRef();
 
   const thread = activeConv ? chat.conversations.find(c => c.id === activeConv) : null;
+
+  const riderAction = useCallback((label) => {
+    window.alert(`${label} is coming soon in Rider chat.`);
+  }, []);
 
   useEffect(() => {
     if (jumpTo && jumpTo !== activeConv) {
@@ -83,6 +87,22 @@ export function ChatPanel({ chat, userId, onClose, isMobile, jumpTo, setJumpTo }
 
       {!thread ? (
         <div style={{ flex: 1, overflowY: "auto", padding: "8px 10px" }}>
+          {role === 'rider' && (
+            <div style={{ marginBottom: 10, display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'space-between', padding: '0 3px' }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: 11, color: C.su, fontWeight: 700 }}>Rider chat toolkit</div>
+                <div style={{ fontSize: 10, color: C.tx, lineHeight: 1.4 }}>Quick access to rider-first conversations and group planning.</div>
+              </div>
+              <button onClick={() => riderAction('Find rider')}
+                style={{ background: `${C.ok}14`, color: C.ok, border: `1px solid ${C.ok}25`, borderRadius: 9, padding: '9px 11px', fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
+                Search
+              </button>
+              <button onClick={() => riderAction('Create group chat')}
+                style={{ background: `${C.ac}14`, color: C.ac, border: `1px solid ${C.ac}25`, borderRadius: 9, padding: '9px 11px', fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
+                Group
+              </button>
+            </div>
+          )}
           {chat.conversations.length === 0 && (
             <div style={{ textAlign: "center", padding: "60px 20px" }}>
               <div style={{ fontSize: 42, marginBottom: 10 }}>💬</div>
@@ -280,7 +300,7 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
   );
 
   if (isMobile) return (
-    <div style={{ minHeight: "100vh", background: C.bg, color: C.tx, fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", paddingTop: 48, paddingBottom: 70 }}>
+    <div style={{ minHeight: "100vh", background: C.bg, color: C.tx, fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", paddingTop: 60, paddingBottom: 70 }}>
       <style>{`${CSS}body{overflow-x:hidden}`}</style>
       <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: 58, background: C.surf, boxShadow: C.shadowLg, backdropFilter: "blur(22px)", borderBottom: `1px solid ${C.bd}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px", zIndex: 200 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -304,7 +324,7 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
         </div>
       </div>
       {children}
-      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: "10px 12px 14px", background: C.surf, backdropFilter: "blur(22px)", borderTop: `1px solid ${C.bd}`, display: "flex", gap: 10, zIndex: 200 }}>
+      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: "10px 10px 14px", background: C.surf, backdropFilter: "blur(22px)", borderTop: `1px solid ${C.bd}`, display: "flex", gap: 2, zIndex: 200 }}>
         {nav.map(({ I, l }, i) => {
           const active = tab === i;
           return (
@@ -314,8 +334,8 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              gap: 6,
-              padding: "10px 8px",
+              gap: 4,
+              padding: "8px 6px",
               borderRadius: 18,
               border: active ? `1px solid ${rc}` : `1px solid ${C.bd}`,
               background: active ? `${rc}1F` : C.surf,
@@ -375,7 +395,7 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
               </button>
             </div>
           )}
-          {chatMode === "chat" && <ChatPanel chat={chat} userId={userId} onClose={() => setShowChat(false)} isMobile={isMobile} jumpTo={chatJump} setJumpTo={setChatJump} />}
+          {chatMode === "chat" && <ChatPanel chat={chat} role={role} userId={userId} onClose={() => setShowChat(false)} isMobile={isMobile} jumpTo={chatJump} setJumpTo={setChatJump} />}
           {chatMode === "hub" && role === "customer" && hubsHook && (
             <HubPanel
               hub={hubsHook.hub}
@@ -510,7 +530,7 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
               </button>
             </div>
           )}
-          {chatMode === "chat" && <ChatPanel chat={chat} userId={userId} onClose={() => setShowChat(false)} isMobile={false} jumpTo={chatJump} setJumpTo={setChatJump} />}
+          {chatMode === "chat" && <ChatPanel chat={chat} role={role} userId={userId} onClose={() => setShowChat(false)} isMobile={false} jumpTo={chatJump} setJumpTo={setChatJump} />}
           {chatMode === "hub" && role === "customer" && hubsHook && (
             <HubPanel
               hub={hubsHook.hub}

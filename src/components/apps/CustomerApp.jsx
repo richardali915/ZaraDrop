@@ -44,6 +44,22 @@ export default function CustomerApp({ tab, setTab, isMobile, user, profile, wall
   const [orderError,    setOrdErr]   = useState("");
 
   const storesHook = useStores(appMode === "Pharmacy" ? "pharmacy" : appMode === "Supermarket" ? "supermarket" : "food");
+
+  useEffect(() => {
+    if (tab === 0) {
+      setSV(null);
+      setSMenu([]);
+      setCart({});
+      setCheckout(false);
+    }
+  }, [tab]);
+
+  useEffect(() => {
+    if (appMode && tab === 1) {
+      setSV(null);
+      setSMenu([]);
+    }
+  }, [appMode, tab]);
   const ordersHook = useOrders(user?.id, "customer", null);
 
   const P = isMobile ? "10px 12px" : "14px 20px";
@@ -95,7 +111,7 @@ export default function CustomerApp({ tab, setTab, isMobile, user, profile, wall
   };
 
   // ── STORE DETAIL ──────────────────────────────────────────
-  if (storeView) return (
+  if (storeView && tab === 1) return (
     <div style={{ paddingBottom: 88 }}>
       {pinOpen && <PINModal title="Confirm Payment" sub="Enter your wallet PIN" stored={null}
         onOk={() => doPlaceOrder()} onCancel={() => setPinOpen(false)} />}
@@ -276,7 +292,7 @@ export default function CustomerApp({ tab, setTab, isMobile, user, profile, wall
         {/* Sub-header — sticky on desktop (stays within the content column, never spills onto the sidebar), fixed to the viewport on mobile */}
         <div style={{
           position: isMobile ? "fixed" : "sticky",
-          top: isMobile ? 48 : 0,
+          top: isMobile ? 60 : 0,
           left: 0, right: 0,
           background: "var(--zd-bg)",
           backdropFilter: "blur(20px)",

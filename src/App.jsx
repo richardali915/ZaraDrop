@@ -168,6 +168,23 @@ function AppInner() {
     </>
   );
 
+  // ── Returning user with a remembered role but no session yet
+  if (!user && activeRole && !pendingRole) return (
+    <>
+      <style>{CSS}</style>
+      <ToastContainer toasts={notifs.toasts} onDismiss={notifs.dismissToast} />
+      <AuthGate
+        role={activeRole}
+        onSuccess={handleAuthSuccess}
+        onBack={() => {
+          setActiveRole(null);
+          setPendingRole(null);
+          try { window.localStorage.removeItem('zaradrop_role'); } catch (e) {}
+        }}
+      />
+    </>
+  );
+
   // ── Auth gate ──────────────────────────────────────────────
   if (pendingRole) return (
     <>

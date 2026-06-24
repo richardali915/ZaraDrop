@@ -282,37 +282,56 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
   if (isMobile) return (
     <div style={{ minHeight: "100vh", background: C.bg, color: C.tx, fontFamily: "-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", paddingTop: 48, paddingBottom: 70 }}>
       <style>{`${CSS}body{overflow-x:hidden}`}</style>
-      <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: 48, background: C.surf, boxShadow: C.shadowLg, backdropFilter: "blur(22px)", borderBottom: `1px solid ${C.bd}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px", zIndex: 200 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 8, background: GZ, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13 }}>⚡</div>
-          <span style={{ fontWeight: 900, fontSize: 16, background: GZ, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", letterSpacing: -0.5 }}>ZaraDrop</span>
+      <div style={{ position: "fixed", top: 0, left: 0, right: 0, height: 58, background: C.surf, boxShadow: C.shadowLg, backdropFilter: "blur(22px)", borderBottom: `1px solid ${C.bd}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px", zIndex: 200 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 34, height: 34, borderRadius: 12, background: GZ, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, boxShadow: "0 10px 30px rgba(255,107,53,.2)" }}>⚡</div>
+          <div>
+            <div style={{ fontWeight: 900, fontSize: 16, letterSpacing: -0.35, lineHeight: 1 }}>ZaraDrop</div>
+            <div style={{ fontSize: 10, color: C.su, letterSpacing: 0.7 }}>Premium delivery hub</div>
+          </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <RoleTag />
           <Badge icon={<MessageCircle size={15} color={showChat ? C.ac : C.su2} />} count={chat.unreadTotal} onClick={tChat} active={showChat} />
           <Badge icon={<Bell size={15} color={showNotif ? C.ac : C.su2} />} count={notifs.unread} onClick={tNotif} active={showNotif} />
-          <button onClick={toggleTheme} style={{ width: 34, height: 34, borderRadius: 11, border: `1px solid ${C.bd}`, background: C.surf, display: "flex", alignItems: "center", justifyContent: "center", color: C.su, cursor: "pointer" }} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
+          <button onClick={toggleTheme} style={{ width: 36, height: 36, borderRadius: 12, border: `1px solid ${C.bd}`, background: C.surf, display: "flex", alignItems: "center", justifyContent: "center", color: C.su, cursor: "pointer" }} title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}>
             {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
           </button>
           {role === "customer" && hubsHook && (
-            <button onClick={openMapPanel} style={{ width: 34, height: 34, borderRadius: 11, border: `1px solid ${C.bd}`, background: C.surf, display: "flex", alignItems: "center", justifyContent: "center", color: C.su, cursor: "pointer" }} title="Open route planner">
-              <MapPin size={15} />
+            <button onClick={openMapPanel} style={{ width: 36, height: 36, borderRadius: 12, border: `1px solid ${C.bd}`, background: C.surf, display: "flex", alignItems: "center", justifyContent: "center", color: C.su, cursor: "pointer" }} title="Open route planner">
+              <MapPin size={16} />
             </button>
           )}
         </div>
       </div>
       {children}
-      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, height: 66, background: C.surf, backdropFilter: "blur(22px)", borderTop: `1px solid ${C.bd}`, display: "flex", alignItems: "center", zIndex: 200, paddingBottom: 4 }}>
+      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: "10px 12px 14px", background: C.surf, backdropFilter: "blur(22px)", borderTop: `1px solid ${C.bd}`, display: "flex", gap: 10, zIndex: 200 }}>
         {nav.map(({ I, l }, i) => {
           const active = tab === i;
           return (
-            <div key={i} onClick={() => setTab(i)} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3, cursor: "pointer", padding: "8px 4px", color: active ? rc : "rgba(255,255,255,.45)", transition: "all .18s ease", transform: active ? "scale(1.08)" : "scale(1)" }}>
-              <div style={{ position: "relative", width: 38, height: 32, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 10, background: active ? `${rc}15` : "transparent", transition: "all .15s" }}>
-                {active && <div style={{ position: "absolute", inset: 0, borderRadius: 10, background: `${rc}08`, border: `1.5px solid ${rc}35` }} />}
-                <I size={20} style={{ position: "relative", zIndex: 1, fontWeight: active ? 800 : 600 }} />
+            <button key={i} onClick={() => setTab(i)} style={{
+              flex: 1,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "12px 10px",
+              borderRadius: 18,
+              border: active ? `1px solid ${rc}` : `1px solid ${C.bd}`,
+              background: active ? `${rc}1F` : C.surf,
+              color: active ? rc : C.su,
+              cursor: "pointer",
+              fontFamily: "inherit",
+              transition: "all .18s ease",
+              boxShadow: active ? "0 18px 48px rgba(0,0,0,.08)" : "none",
+            }}>
+              <div style={{ width: 34, height: 34, borderRadius: 14, display: "grid", placeItems: "center", background: active ? rc : C.surf, color: active ? "#fff" : C.su }}>
+                <I size={18} />
               </div>
-              <span style={{ fontSize: 9.5, fontWeight: active ? 800 : 600, letterSpacing: 0.2 }}>{l}</span>
-            </div>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", minWidth: 0 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{l}</span>
+                {active && <span style={{ fontSize: 9, color: C.su, fontWeight: 600 }}>Active</span>}
+              </div>
+            </button>
           );
         })}
       </div>

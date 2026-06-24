@@ -496,37 +496,58 @@ export default function WalletScreen({ wallet: wHook, role }) {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(96px,1fr))", gap: 10, marginBottom: 13 }}>
-        {[
-          { icon: <ArrowUpRight size={18} />, l: "Top up", g: () => setSub("topup") },
-          { icon: <ArrowRight size={18} />, l: "Send", g: () => setSub("send") },
-          { icon: <Download size={18} />, l: "Receive", g: handleBankDetails },
-          { icon: <Banknote size={18} />, l: "Withdraw", g: () => setSub("withdraw") },
-          { icon: <CreditCard size={18} />, l: "Accounts", g: () => setSub("accounts") },
-        ].map((action) => (
-          <button
-            key={action.l}
-            onClick={action.g}
-            style={{
-              ...gl(),
-              border: "1px solid var(--zd-border)",
-              borderRadius: 16,
-              padding: "14px 10px",
-              cursor: "pointer",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 6,
-              fontFamily: "inherit",
-              minHeight: 108,
-            }}
-          >
-            <div style={{ width: 42, height: 42, display: "grid", placeItems: "center", borderRadius: 14, background: "var(--zd-surface)", color: cc }}>
-              {action.icon}
-            </div>
-            <span style={{ fontSize: 12, color: C.tx, fontWeight: 700 }}>{action.l}</span>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 14 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
+          <div>
+            <div style={{ fontSize: 12, color: C.su, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 6 }}>Quick wallet actions</div>
+            <div style={{ fontSize: 14, fontWeight: 800, color: C.tx }}>Top up, send, receive or withdraw in one place.</div>
+          </div>
+          <button onClick={() => setSub("accounts")}
+            style={{ border: `1px solid ${C.bd}`, background: C.surf, color: C.tx, borderRadius: 14, padding: "10px 14px", cursor: "pointer", fontSize: 12, fontWeight: 700, fontFamily: "inherit" }}>
+            Manage accounts
           </button>
-        ))}
+        </div>
+
+        <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingTop: 2 }}>
+          {[
+            { icon: <ArrowUpRight size={18} />, l: "Top up", m: "Add funds instantly", g: () => setSub("topup") },
+            { icon: <ArrowRight size={18} />, l: "Send", m: "Transfer to users", g: () => setSub("send") },
+            { icon: <Download size={18} />, l: "Receive", m: "Bank details", g: handleBankDetails },
+            { icon: <Banknote size={18} />, l: "Withdraw", m: "Send to bank", g: () => setSub("withdraw") },
+          ].map((action) => (
+            <button
+              key={action.l}
+              onClick={action.g}
+              style={{
+                minWidth: 172,
+                flex: "1 0 auto",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                justifyContent: "space-between",
+                gap: 12,
+                padding: "18px 16px",
+                borderRadius: 20,
+                border: `1px solid ${C.bd}`,
+                background: C.surf,
+                cursor: "pointer",
+                textAlign: "left",
+                boxShadow: "0 16px 40px rgba(0,0,0,.04)",
+                transition: "transform .18s ease, border-color .18s ease",
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-2px)"}
+              onMouseLeave={(e) => e.currentTarget.style.transform = "none"}
+            >
+              <div style={{ width: 42, height: 42, borderRadius: 16, background: "var(--zd-surface-1)", display: "grid", placeItems: "center", color: cc }}>
+                {action.icon}
+              </div>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 800, color: C.tx }}>{action.l}</div>
+                <div style={{ fontSize: 11, color: C.su, marginTop: 4, lineHeight: 1.5 }}>{action.m}</div>
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div style={{ marginBottom: 14 }}>

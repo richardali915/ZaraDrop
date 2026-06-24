@@ -26,10 +26,15 @@ const computeDistanceKm = (a, b) => {
   return R * 2 * Math.asin(Math.sqrt(h));
 };
 
+const computeRouteSegment = (from, to) => {
+  return from && to ? computeDistanceKm(from, to) : 0;
+};
+
 export default function MapPanel({ region = "Wuse II", onClose, isMobile }) {
   const [currentPos, setCurrentPos] = useState(null);
   const [status, setStatus] = useState("locating");
-  const [destination, setDestination] = useState(region);
+  const [pickupHub, setPickupHub] = useState(region);
+  const [dropoffArea, setDropoffArea] = useState(region === "Kubwa" ? "Garki" : "Kubwa");
   const [showHelp, setShowHelp] = useState(false);
   const mapRef = useRef();
   const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || "";
@@ -39,7 +44,8 @@ export default function MapPanel({ region = "Wuse II", onClose, isMobile }) {
   });
 
   useEffect(() => {
-    setDestination(region);
+    setPickupHub(region);
+    setDropoffArea(region === "Kubwa" ? "Garki" : "Kubwa");
   }, [region]);
 
   useEffect(() => {
@@ -59,17 +65,20 @@ export default function MapPanel({ region = "Wuse II", onClose, isMobile }) {
     );
   }, []);
 
-  const destinationPoint = HUB_LOCATIONS[destination] || HUB_LOCATIONS["Wuse II"];
-  const routePoints = currentPos ? [currentPos, destinationPoint] : [destinationPoint];
-  const distanceKm = currentPos ? computeDistanceKm(currentPos, destinationPoint) : null;
-  const etaMin = distanceKm ? Math.max(8, Math.round(distanceKm / 0.55)) : null;
-  const originLabel = currentPos ? "Your location" : "Current location unavailable";
-  const routeLabel = `${originLabel} → ${destination}`;
+  const pickupPoint = HUB_LOCATIONS[pickupHub] || HUB_LOCATIONS["Wuse II"];
+  const dropoffPoint = HUB_LOCATIONS[dropoffArea] || HUB_LOCATIONS["Garki"];
+  const routePoints = currentPos ? [currentPos, pickupPoint, dropoffPoint] : [pickupPoint, dropoffPoint];
+  const segmentA = currentPos ? computeRouteSegment(currentPos, pickupPoint) : 0;
+  const segmentB = computeRouteSegment(pickupPoint, dropoffPoint);
+  const distanceKm = toFixed(segmentA + segmentB, 1);
+  const etaMin = currentPos ? Math.max(10, Math.round((segmentA + segmentB) / 0.55)) : null;
+  const originLabel = currentPos ? "Your current location" : "Location unavailable";
+  const routeLabel = `${pickupHub} hub → ${dropoffArea}`;
 
-  const mapCenter = currentPos || destinationPoint;
+  const mapCenter = currentPos || pickupPoint;
   const gmapsLink = currentPos
-    ? `https://www.google.com/maps/dir/?api=1&origin=${currentPos.lat},${currentPos.lng}&destination=${destinationPoint.lat},${destinationPoint.lng}&travelmode=driving`
-    : `https://www.google.com/maps/search/?api=1&query=${destinationPoint.lat},${destinationPoint.lng}`;
+    ? `https://www.google.com/maps/dir/?api=1&origin=${currentPos.lat},${currentPos.lng}&destination=${dropoffPoint.lat},${dropoffPoint.lng}&travelmode=driving`
+    : `https://www.google.com/maps/search/?api=1&query=${pickupPoint.lat},${pickupPoint.lng}`;
 
   const handleMapLoad = (map) => {
     mapRef.current = map;
@@ -126,44 +135,78 @@ export default function MapPanel({ region = "Wuse II", onClose, isMobile }) {
           ))}
         </div>
 
-        <div style={{ padding: "16px", display: "grid", gap: 12, background: "var(--zd-bg)", borderBottom: `1px solid ${C.bd}` }}>
+        <div style={{ padding: "16px", display: "grid", gap: 14, background: "var(--zd-bg)", borderBottom: `1px solid ${C.bd}` }}>
           <div style={{ ...{
             background: "var(--zd-surface)",
             border: `1px solid ${C.bd}`,
-            borderRadius: 18,
-            padding: "14px",
+            borderRadius: 20,
+            padding: "16px",
           } }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12, gap: 12 }}>
               <div>
-                <div style={{ fontSize: 12, color: C.su, marginBottom: 4 }}>Route</div>
-                <div style={{ fontSize: 14, fontWeight: 800, color: C.tx }}>{routeLabel}</div>
+                <div style={{ fontSize: 11, color: C.su, marginBottom: 5, textTransform: "uppercase", letterSpacing: 1.4 }}>Live routing overview</div>
+                <div style={{ fontSize: 16, fontWeight: 800, color: C.tx }}>{routeLabel}</div>
               </div>
-              <div style={{ width: 38, height: 38, borderRadius: 12, background: G, display: "grid", placeItems: "center", color: "#fff" }}><MapPin size={18} /></div>
+              <div style={{ width: 42, height: 42, borderRadius: 14, background: G, display: "grid", placeItems: "center", color: "#fff" }}><MapPin size={18} /></div>
             </div>
-            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{ fontSize: 9, color: C.su, textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 4 }}>Distance</div>
-                <div style={{ fontSize: 16, fontWeight: 800, color: C.tx }}>{distanceKm ? `${toFixed(distanceKm)} km` : "Waiting for location"}</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div style={{ padding: "14px", borderRadius: 18, background: "rgba(255,255,255,.04)", border: `1px solid ${C.bd}` }}>
+                <div style={{ fontSize: 9, color: C.su, textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 6 }}>Origin</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: C.tx }}>{originLabel}</div>
+                <div style={{ fontSize: 11, color: C.su, marginTop: 5 }}>{status === 'ready' ? 'GPS live' : status === 'denied' ? 'Location denied' : 'Waiting for GPS'}</div>
               </div>
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{ fontSize: 9, color: C.su, textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 4 }}>Est. travel</div>
-                <div style={{ fontSize: 16, fontWeight: 800, color: C.tx }}>{etaMin ? `${etaMin} min` : "N/A"}</div>
+              <div style={{ padding: "14px", borderRadius: 18, background: "rgba(255,255,255,.04)", border: `1px solid ${C.bd}` }}>
+                <div style={{ fontSize: 9, color: C.su, textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 6 }}>Distance</div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: C.tx }}>{distanceKm ? `${distanceKm} km` : 'N/A'}</div>
+                <div style={{ fontSize: 11, color: C.su, marginTop: 5 }}>Est. {etaMin ? `${etaMin} min` : 'N/A'}</div>
               </div>
             </div>
           </div>
 
+          <div style={{ display: "grid", gap: 12, gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr" }}>
+            <div style={{ display: "grid", gap: 10 }}>
+              {[
+                { title: "Pickup hub", label: pickupHub },
+                { title: "Dropoff area", label: dropoffArea },
+              ].map((item) => (
+                <div key={item.title} style={{ padding: "14px", borderRadius: 18, background: "var(--zd-surface)", border: `1px solid ${C.bd}` }}>
+                  <div style={{ fontSize: 9, color: C.su, textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 6 }}>{item.title}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: C.tx }}>{item.label}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ padding: "14px", borderRadius: 18, background: "var(--zd-surface)", border: `1px solid ${C.bd}` }}>
+              <div style={{ fontSize: 11, color: C.su, marginBottom: 8 }}>Route stages</div>
+              {[
+                { label: 'Origin', detail: originLabel, status: currentPos ? 'Live' : 'Pending' },
+                { label: 'Hub pickup', detail: pickupHub, status: 'Ready' },
+                { label: 'Final dropoff', detail: dropoffArea, status: 'Planned' },
+              ].map((stage, idx) => (
+                <div key={idx} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: idx === 2 ? 0 : 10 }}>
+                  <div style={{ width: 10, height: 10, borderRadius: 999, background: stage.status === 'Live' ? C.ac : stage.status === 'Planned' ? C.su : C.bd }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 12, color: C.tx, fontWeight: 700 }}>{stage.label}</div>
+                    <div style={{ fontSize: 11, color: C.su }}>{stage.detail}</div>
+                  </div>
+                  <div style={{ fontSize: 10, color: C.su, fontWeight: 700 }}>{stage.status}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {apiKey && !loadError && isLoaded ? (
-            <div style={{ height: isMobile ? 320 : 380, borderRadius: 22, overflow: "hidden", border: `1px solid ${C.bd}` }}>
+            <div style={{ height: isMobile ? 320 : 380, borderRadius: 26, overflow: "hidden", border: `1px solid ${C.bd}` }}>
               <GoogleMap
                 mapContainerStyle={{ width: "100%", height: "100%" }}
                 center={mapCenter}
-                zoom={currentPos ? 13 : 11}
+                zoom={currentPos ? 12 : 10}
                 onLoad={handleMapLoad}
                 options={{ streetViewControl: false, fullscreenControl: false, mapTypeControl: false }}
               >
-                <Marker position={destinationPoint} label={{ text: destination, color: "#fff", fontSize: "12px", fontWeight: "700" }} />
+                <Marker position={pickupPoint} label={{ text: pickupHub, color: "#fff", fontSize: "12px", fontWeight: "700" }} />
+                <Marker position={dropoffPoint} label={{ text: dropoffArea, color: "#fff", fontSize: "12px", fontWeight: "700" }} />
                 {currentPos && <Marker position={currentPos} label={{ text: "You", color: "#FFFFFF", fontSize: "11px", fontWeight: "700" }} />}
-                {currentPos && <Polyline path={routePoints} options={{ strokeColor: "#C13FE0", strokeOpacity: 0.9, strokeWeight: 5, icons: [{ icon: { path: "M 0,-1 0,1", strokeOpacity: 1, scale: 3 }, offset: "0", repeat: "12px" }] }} />}
+                <Polyline path={routePoints} options={{ strokeColor: "#C13FE0", strokeOpacity: 0.85, strokeWeight: 5, icons: [{ icon: { path: "M 0,-1 0,1", strokeOpacity: 1, scale: 3 }, offset: "0", repeat: "14px" }] }} />
               </GoogleMap>
             </div>
           ) : (

@@ -116,14 +116,14 @@ export default function MapPanel({ region = "Wuse II", onClose, isMobile }) {
         )}
         <div style={{ display: "flex", gap: 10, padding: "14px 16px", overflowX: "auto", borderBottom: `1px solid ${C.bd}` }}>
           {Object.keys(HUB_LOCATIONS).map((hub) => (
-            <button key={hub} onClick={() => setDestination(hub)}
+            <button key={hub} onClick={() => setPickupHub(hub)}
               style={{
                 minWidth: 104,
                 borderRadius: 14,
                 padding: "10px 12px",
-                background: destination === hub ? G : "var(--zd-surface)",
-                color: destination === hub ? "#fff" : C.tx,
-                border: `1px solid ${destination === hub ? "transparent" : "var(--zd-border)"}`,
+                background: pickupHub === hub ? G : "var(--zd-surface)",
+                color: pickupHub === hub ? "#fff" : C.tx,
+                border: `1px solid ${pickupHub === hub ? "transparent" : "var(--zd-border)"}`,
                 cursor: "pointer",
                 fontSize: 11,
                 fontWeight: 700,

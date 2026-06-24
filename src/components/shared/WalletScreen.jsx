@@ -464,90 +464,48 @@ export default function WalletScreen({ wallet: wHook, role }) {
   return (
     <div style={{ paddingBottom: 32 }}>
       <div style={{
-        background: "linear-gradient(135deg,rgba(193,68,212,.24),rgba(139,48,201,.1))",
-        border: "1px solid rgba(193,68,212,.3)",
-        borderRadius: 22,
-        padding: "20px 20px 18px",
-        marginBottom: 13,
+        background: "linear-gradient(135deg, rgba(136, 58, 212, 0.95), rgba(60, 18, 105, 0.95))",
+        border: `1px solid rgba(255,255,255,.12)`,
+        borderRadius: 24,
+        padding: "24px 22px 22px",
+        marginBottom: 16,
         position: "relative",
         overflow: "hidden",
-        boxShadow: "0 14px 44px rgba(193,68,212,.16)",
+        boxShadow: "0 20px 60px rgba(77, 22, 173, .28)",
       }}>
-        <div style={{ position: "absolute", top: -20, right: -20, width: 140, height: 140, borderRadius: "50%", background: "rgba(193,68,212,.07)", pointerEvents: "none" }} />
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-          <div style={{ fontSize: 9, color: "rgba(255,255,255,.45)", fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5 }}>ZaraDrop Wallet</div>
-          <button onClick={() => setShowBal(!showBal)} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,.4)", display: "flex", padding: 2 }}>
-            {showBal ? <Eye size={13} /> : <EyeOff size={13} />}
-          </button>
+        <div style={{ position: "absolute", top: -24, right: -24, width: 130, height: 130, borderRadius: "50%", background: "rgba(255,255,255,.08)", pointerEvents: "none" }} />
+        <div style={{ fontSize: 11, color: "rgba(255,255,255,.78)", fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, marginBottom: 10 }}>Available balance</div>
+        <div style={{ fontSize: 36, fontWeight: 900, color: "#fff", letterSpacing: -1.2, marginBottom: 8, lineHeight: 1 }}>{showBal ? `₦${balance.toLocaleString()}` : "₦••••••"}</div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,.78)", fontSize: 12 }}><span>Money in</span><strong style={{ color: C.ok }}>+{fmtK(tin)}</strong></div>
+          <div style={{ width: 1, height: 16, background: "rgba(255,255,255,.18)" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 8, color: "rgba(255,255,255,.78)", fontSize: 12 }}><span>Money out</span><strong style={{ color: C.er }}>-{fmtK(tout)}</strong></div>
         </div>
-        <div style={{ fontSize: 34, fontWeight: 900, color: "#fff", letterSpacing: -1, marginBottom: 12 }}>
-          {showBal ? `₦${balance.toLocaleString()}` : "₦••••••"}
-        </div>
-        <div style={{ display: "flex", gap: 16 }}>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 9, color: "rgba(255,255,255,.45)", marginBottom: 4 }}>Money In</div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: C.ok }}>+{fmtK(tin)}</div>
-          </div>
-          <div style={{ width: 1, background: "rgba(255,255,255,.12)", opacity: 0.85 }} />
-          <div style={{ minWidth: 0 }}>
-            <div style={{ fontSize: 9, color: "rgba(255,255,255,.45)", marginBottom: 4 }}>Money Out</div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: C.er }}>-{fmtK(tout)}</div>
-          </div>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <Btn sm full={false} onClick={() => setShowBal((p) => !p)} sx={{ minWidth: 138, flex: "1 1 138px" }}>
+            {showBal ? <><Eye size={14} /> Hide</> : <><EyeOff size={14} /> Show</>}
+          </Btn>
+          <Btn v="ghost" sm full={false} onClick={() => setSub("accounts")} sx={{ minWidth: 138, flex: "1 1 138px" }}>
+            Manage accounts
+          </Btn>
         </div>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 12, marginBottom: 14 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
-          <div>
-            <div style={{ fontSize: 12, color: C.su, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.2, marginBottom: 6 }}>Quick wallet actions</div>
-            <div style={{ fontSize: 14, fontWeight: 800, color: C.tx }}>Top up, send, receive or withdraw in one place.</div>
-          </div>
-          <button onClick={() => setSub("accounts")}
-            style={{ border: `1px solid ${C.bd}`, background: C.surf, color: C.tx, borderRadius: 14, padding: "10px 14px", cursor: "pointer", fontSize: 12, fontWeight: 700, fontFamily: "inherit" }}>
-            Manage accounts
-          </button>
-        </div>
-
-        <div style={{ display: "flex", gap: 10, overflowX: "auto", paddingTop: 2 }}>
-          {[
-            { icon: <ArrowUpRight size={18} />, l: "Top up", m: "Add funds instantly", g: () => setSub("topup") },
-            { icon: <ArrowRight size={18} />, l: "Send", m: "Transfer to users", g: () => setSub("send") },
-            { icon: <Download size={18} />, l: "Receive", m: "Bank details", g: handleBankDetails },
-            { icon: <Banknote size={18} />, l: "Withdraw", m: "Send to bank", g: () => setSub("withdraw") },
-          ].map((action) => (
-            <button
-              key={action.l}
-              onClick={action.g}
-              style={{
-                minWidth: 172,
-                flex: "1 0 auto",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                justifyContent: "space-between",
-                gap: 12,
-                padding: "18px 16px",
-                borderRadius: 20,
-                border: `1px solid ${C.bd}`,
-                background: C.surf,
-                cursor: "pointer",
-                textAlign: "left",
-                boxShadow: "0 16px 40px rgba(0,0,0,.04)",
-                transition: "transform .18s ease, border-color .18s ease",
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-2px)"}
-              onMouseLeave={(e) => e.currentTarget.style.transform = "none"}
-            >
-              <div style={{ width: 42, height: 42, borderRadius: 16, background: "var(--zd-surface-1)", display: "grid", placeItems: "center", color: cc }}>
-                {action.icon}
-              </div>
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 800, color: C.tx }}>{action.l}</div>
-                <div style={{ fontSize: 11, color: C.su, marginTop: 4, lineHeight: 1.5 }}>{action.m}</div>
-              </div>
-            </button>
-          ))}
-        </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 10, marginBottom: 14 }}>
+        {[
+          { icon: <ArrowUpRight size={18} />, l: "Top up", g: () => setSub("topup"), v: "p" },
+          { icon: <ArrowRight size={18} />, l: "Send", g: () => setSub("send"), v: "ok" },
+          { icon: <Download size={18} />, l: "Receive", g: handleBankDetails, v: "g" },
+          { icon: <Banknote size={18} />, l: "Withdraw", g: () => setSub("withdraw"), v: "warn" },
+        ].map((action) => (
+          <Btn key={action.l} v={action.v} sm full onClick={action.g} sx={{ display: "flex", alignItems: "center", justifyContent: "flex-start", gap: 10, padding: "16px 14px", borderRadius: 18, minHeight: 80 }}>
+            <span style={{ width: 38, height: 38, borderRadius: 14, display: "grid", placeItems: "center", background: "rgba(255,255,255,.08)", color: C.tx }}>{action.icon}</span>
+            <span style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 2 }}>
+              <span style={{ fontSize: 13, fontWeight: 800 }}>{action.l}</span>
+              <span style={{ fontSize: 11, color: C.su }}>Tap to {action.l.toLowerCase()}</span>
+            </span>
+          </Btn>
+        ))}
       </div>
 
       <div style={{ marginBottom: 14 }}>

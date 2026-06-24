@@ -287,7 +287,6 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
           <div style={{ width: 34, height: 34, borderRadius: 12, background: GZ, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, boxShadow: "0 10px 30px rgba(255,107,53,.2)" }}>⚡</div>
           <div>
             <div style={{ fontWeight: 900, fontSize: 16, letterSpacing: -0.35, lineHeight: 1 }}>ZaraDrop</div>
-            <div style={{ fontSize: 10, color: C.su, letterSpacing: 0.7 }}>Premium delivery hub</div>
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -312,9 +311,11 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
             <button key={i} onClick={() => setTab(i)} style={{
               flex: 1,
               display: "flex",
+              flexDirection: "column",
               alignItems: "center",
-              gap: 10,
-              padding: "12px 10px",
+              justifyContent: "center",
+              gap: 6,
+              padding: "10px 8px",
               borderRadius: 18,
               border: active ? `1px solid ${rc}` : `1px solid ${C.bd}`,
               background: active ? `${rc}1F` : C.surf,
@@ -327,10 +328,7 @@ export default function AppShell({ role, tab, setTab, chat, notifs, showChat, se
               <div style={{ width: 34, height: 34, borderRadius: 14, display: "grid", placeItems: "center", background: active ? rc : C.surf, color: active ? "#fff" : C.su }}>
                 <I size={18} />
               </div>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", minWidth: 0 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{l}</span>
-                {active && <span style={{ fontSize: 9, color: C.su, fontWeight: 600 }}>Active</span>}
-              </div>
+              <span style={{ fontSize: 10.5, fontWeight: 700, whiteSpace: "nowrap", textTransform: "capitalize" }}>{l}</span>
             </button>
           );
         })}

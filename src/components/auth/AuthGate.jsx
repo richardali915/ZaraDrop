@@ -96,28 +96,36 @@ function SocialSignIn({ rc, role, onBack, onSignedIn }) {
 
   return (
     <Wrap rc={rc} onBack={onBack}>
-      <div style={{ paddingBottom:22, marginBottom:22, borderBottom:'1px solid rgba(255,255,255,.08)' }}>
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, flexWrap:'wrap' }}>
-          <div style={{ display:'flex', alignItems:'center', gap:12, minWidth:0 }}>
-            <div style={{ width:52, height:52, borderRadius:18, background:`${roleColor}18`, border:`1px solid ${roleColor}28`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:28, color:roleColor, flexShrink:0 }}>
+      <div style={{ paddingBottom:24, marginBottom:24, borderBottom:'1px solid rgba(255,255,255,.08)' }}>
+        <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', gap:14, flexWrap:'wrap' }}>
+          <div style={{ display:'flex', alignItems:'center', gap:14, minWidth:0 }}>
+            <div style={{ width:60, height:60, borderRadius:20, background:`linear-gradient(135deg, ${roleColor}40, ${roleColor}10)`, border:`1px solid ${roleColor}30`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:28, color:roleColor, flexShrink:0, boxShadow:`0 16px 32px ${roleColor}20` }}>
               {rc.icon}
             </div>
             <div style={{ minWidth:0 }}>
-              <div style={{ fontWeight:900, fontSize:20, color:'#fff', marginBottom:4, lineHeight:1.1 }}>
-                {role === 'customer' ? 'Order fast, sign in faster' : role === 'rider' ? 'Rider sign-in' : 'Store sign-in'}
-              </div>
-              <div style={{ fontSize:13, color:'rgba(255,255,255,.6)', lineHeight:1.6 }}>
+              <div style={{ fontWeight:900, fontSize:24, color:'#fff', marginBottom:6, lineHeight:1.05 }}>{role === 'customer' ? 'Welcome back to ZaraDrop' : role === 'rider' ? 'Rider access portal' : 'Store access portal'}</div>
+              <div style={{ fontSize:14, color:'rgba(255,255,255,.68)', lineHeight:1.7 }}>
                 {role === 'customer'
-                  ? 'Use one tap social login to access ZaraDrop.'
+                  ? 'Quick social login to browse, order and pay from your wallet.'
                   : role === 'rider'
-                  ? 'Authenticate, then connect your Rider ID to accept deliveries.'
-                  : 'Authenticate, then verify your Store access with ID + passcode.'}
+                  ? 'Tap a provider and finish by connecting your Rider ID to start accepting deliveries.'
+                  : 'Authenticate with a store login, then verify your store identity for secure access.'}
               </div>
             </div>
           </div>
-          <div style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'10px 14px', borderRadius:14, background:'rgba(255,255,255,.04)', border:'1px solid rgba(255,255,255,.08)', color:'rgba(255,255,255,.7)', fontSize:12 }}>
+          <div style={{ display:'inline-flex', alignItems:'center', gap:8, padding:'12px 16px', borderRadius:16, background:'rgba(255,255,255,.08)', border:'1px solid rgba(255,255,255,.12)', color:'rgba(255,255,255,.75)', fontSize:12, minWidth:144, justifyContent:'center' }}>
             <ShieldCheck size={16} />
-            Secure login
+            Secure Single Sign-on
+          </div>
+        </div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10, marginTop:18, fontSize:12, color:'rgba(255,255,255,.55)' }}>
+          <div style={{ padding:12, borderRadius:16, background:'rgba(255,255,255,.03)', border:'1px solid rgba(255,255,255,.06)' }}>
+            <div style={{ fontWeight:700, marginBottom:4 }}>Fast access</div>
+            Social sign-in with Google, Facebook, or X.
+          </div>
+          <div style={{ padding:12, borderRadius:16, background:'rgba(255,255,255,.03)', border:'1px solid rgba(255,255,255,.06)' }}>
+            <div style={{ fontWeight:700, marginBottom:4 }}>Privacy-first</div>
+            No passwords stored. Your profile is protected.
           </div>
         </div>
       </div>
@@ -306,12 +314,12 @@ export default function AuthGate({ role, onSuccess, onBack }) {
 // ── Shared wrapper ────────────────────────────────────────────
 function Wrap({ rc, onBack, children }) {
   return (
-    <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.92)', backdropFilter:'blur(22px)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000, padding:20 }}>
+    <div style={{ position:'fixed', inset:0, background:'rgba(5,5,15,.92)', backdropFilter:'blur(24px)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000, padding:20 }}>
       <style>{CSS}</style>
-      <div style={{ background:'rgba(10,10,24,.98)', border:'1px solid rgba(255,255,255,.08)', borderRadius:28, padding:'28px 26px', width:'100%', maxWidth:460, maxHeight:'94vh', overflowY:'auto', boxShadow:'0 32px 90px rgba(0,0,0,.65)' }}>
-        <button onClick={onBack} style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(255,255,255,.03)', border:'1px solid rgba(255,255,255,.08)', borderRadius:14, color:'rgba(255,255,255,.72)', fontSize:13, fontFamily:'inherit', padding:'10px 14px', cursor:'pointer', transition:'all .16s', marginBottom:18 }}
-          onMouseEnter={e => e.currentTarget.style.color='rgba(255,255,255,.75)'}
-          onMouseLeave={e => e.currentTarget.style.color='rgba(255,255,255,.4)'}>
+      <div style={{ background:'linear-gradient(180deg,rgba(12,12,26,.99),rgba(8,8,22,.98))', border:'1px solid rgba(255,255,255,.08)', borderRadius:30, padding:'28px 28px', width:'100%', maxWidth:520, maxHeight:'94vh', overflowY:'auto', boxShadow:'0 42px 120px rgba(0,0,0,.45)' }}>
+        <button onClick={onBack} style={{ display:'inline-flex', alignItems:'center', gap:8, background:'rgba(255,255,255,.05)', border:'1px solid rgba(255,255,255,.1)', borderRadius:16, color:'rgba(255,255,255,.72)', fontSize:13, fontFamily:'inherit', padding:'10px 14px', cursor:'pointer', transition:'all .16s', marginBottom:20 }}
+          onMouseEnter={e => e.currentTarget.style.color='rgba(255,255,255,.9)'}
+          onMouseLeave={e => e.currentTarget.style.color='rgba(255,255,255,.72)'}>
           ← Back
         </button>
         {children}

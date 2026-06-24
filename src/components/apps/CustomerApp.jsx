@@ -47,6 +47,7 @@ export default function CustomerApp({ tab, setTab, isMobile, user, profile, wall
 
   useEffect(() => {
     if (tab === 0) {
+      setMode(null);
       setSV(null);
       setSMenu([]);
       setCart({});

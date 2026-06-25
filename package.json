@@ -2,43 +2,30 @@
   "name": "zaradrop",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@googlemaps/js-api-loader": "^2.1.1",
-    "@react-google-maps/api": "^2.20.8",
-    "@supabase/supabase-js": "^2.100.1",
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^13.5.0",
-    "lucide-react": "^1.7.0",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "react-scripts": "5.0.1",
-    "recharts": "^3.8.1",
-    "web-vitals": "^2.1.4"
-  },
+  "workspaces": [
+    "apps/*-app",
+    "packages/*"
+  ],
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "bootstrap": "npm install",
+    "dev:customer-app": "npm --workspace @zaradrop/customer-app run dev",
+    "dev:rider-app": "npm --workspace @zaradrop/rider-app run dev",
+    "dev:merchant-app": "npm --workspace @zaradrop/merchant-app run dev",
+    "dev:admin-app": "npm --workspace @zaradrop/admin-app run dev",
+    "build:customer-app": "npm --workspace @zaradrop/customer-app run build",
+    "build:rider-app": "npm --workspace @zaradrop/rider-app run build",
+    "build:merchant-app": "npm --workspace @zaradrop/merchant-app run build",
+    "build:admin-app": "npm --workspace @zaradrop/admin-app run build",
+    "build": "npm run build:customer-app && npm run build:rider-app && npm run build:merchant-app && npm run build:admin-app"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@supabase/supabase-js": "^2.100.1",
+    "@sveltejs/adapter-auto": "^7.0.1",
+    "@sveltejs/kit": "^2.67.0",
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
+    "@types/node": "^26.0.1",
+    "svelte": "^4.0.0",
+    "typescript": "^5.7.0",
+    "vite": "^5.4.21"
   }
 }

@@ -1,0 +1,124 @@
+import { writable, get } from 'svelte/store';
+import { supabase, callFunction, fetchOrdersForUser, createOrder, fetchMerchantRequests, fetchOpenRiderJobs, updateOrderStatus } from '@zaradrop/lib';
+import type { Order, OrderItem } from '@zaradrop/types';
+import { user } from './useAuth';
+
+export const orders = writable<Order[]>([]);
+export const merchantRequests = writable<Order[]>([]);
+export const riderJobs = writable<Order[]>([]);
+export const orderLoading = writable(false);
+
+export async function loadCustomerOrders() {
+  const currentUser = get(user);
+  if (!currentUser?.id) {
+    orders.set([]);
+    return [];
+  }
+
+  orderLoading.set(true);
+  try {
+    const result = await fetchOrdersForUser(currentUser.id, 'customer');
+    orders.set(result);
+    return result;
+  } finally {
+    orderLoading.set(false);
+  }
+}
+
+export async function placeCustomerOrder(payload: {
+  store_id: string;
+  total: number;
+  payment_method: string;
+  destination: string;
+  items: OrderItem[];
+}) {
+  const currentUser = get(user);
+  if (!currentUser?.id) throw new Error('Customer must be signed in.');
+
+  orderLoading.set(true);
+  try {
+    const newOrder = await createOrder({
+      customer_id: currentUser.id,
+      store_id: payload.store_id,
+      total: payload.total,
+      payment_method: payload.payment_method,
+      destination: payload.destination,
+      items: payload.items,
+    });
+
+    orders.update((list) => [newOrder, ...list]);
+    return newOrder;
+  } finally {
+    orderLoading.set(false);
+  }
+}
+
+export async function cancelCustomerOrder(orderId: string) {
+  orderLoading.set(true);
+  try {
+    const response = await callFunction('cancel-order', {
+      order_id: orderId,
+      cancelled_by: 'customer',
+      reason: 'Customer request',
+    });
+    await loadCustomerOrders();
+    return response;
+  } finally {
+    orderLoading.set(false);
+  }
+}
+
+export async function loadMerchantRequests(storeId: string) {
+  orderLoading.set(true);
+  try {
+    const result = await fetchMerchantRequests(storeId);
+    merchantRequests.set(result);
+    return result;
+  } finally {
+    orderLoading.set(false);
+  }
+}
+
+export async function approveMerchantOrder(orderId: string, storeId: string) {
+  orderLoading.set(true);
+  try {
+    const updated = await updateOrderStatus(orderId, { status: 'accepted' });
+    await loadMerchantRequests(storeId);
+    return updated;
+  } finally {
+    orderLoading.set(false);
+  }
+}
+
+export async function declineMerchantOrder(orderId: string, storeId: string) {
+  orderLoading.set(true);
+  try {
+    const updated = await updateOrderStatus(orderId, { status: 'declined' });
+    await loadMerchantRequests(storeId);
+    return updated;
+  } finally {
+    orderLoading.set(false);
+  }
+}
+
+export async function loadRiderJobs() {
+  orderLoading.set(true);
+  try {
+    const result = await fetchOpenRiderJobs();
+    riderJobs.set(result);
+    return result;
+  } finally {
+    orderLoading.set(false);
+  }
+}
+
+export async function acceptRiderJob(orderId: string) {
+  orderLoading.set(true);
+  try {
+    const updated = await updateOrderStatus(orderId, { status: 'assigned' });
+    await loadRiderJobs();
+    return updated;
+  } finally {
+    orderLoading.set(false);
+  }
+}

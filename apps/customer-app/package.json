@@ -1,0 +1,24 @@
+{
+  "name": "@zaradrop/customer-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "svelte-kit dev",
+    "build": "svelte-kit build",
+    "preview": "svelte-kit preview"
+  },
+  "devDependencies": {
+    "@sveltejs/kit": "^2.8.0",
+    "@sveltejs/vite-plugin-svelte": "^3.1.2",
+    "svelte": "^4.0.0",
+    "typescript": "^5.7.0"
+  },
+  "dependencies": {
+    "@zaradrop/lib": "*",
+    "@zaradrop/hooks": "*",
+    "@zaradrop/ui": "*",
+    "@zaradrop/styles": "*",
+    "@supabase/supabase-js": "^2.100.1"
+  }
+}

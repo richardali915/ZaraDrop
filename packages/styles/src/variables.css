@@ -1,0 +1,15 @@
+:root {
+  --zd-bg: #0a0018;
+  --zd-surface: rgba(255,255,255,.06);
+  --zd-surface-strong: rgba(255,255,255,.12);
+  --zd-border: rgba(255,255,255,.08);
+  --zd-text: #f7f7fb;
+  --zd-muted: rgba(255,255,255,.65);
+  --zd-accent: #c144d4;
+  --zd-accent-2: #ff6b35;
+  --zd-success: #22d47c;
+  --zd-warning: #f59e0b;
+  --zd-danger: #ff4d6d;
+  --zd-radius: 18px;
+  --zd-shadow: 0 24px 80px rgba(0,0,0,0.16);
+}

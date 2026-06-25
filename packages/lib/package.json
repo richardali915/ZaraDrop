@@ -1,0 +1,12 @@
+{
+  "name": "@zaradrop/lib",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.100.1",
+    "@zaradrop/types": "*"
+  }
+}

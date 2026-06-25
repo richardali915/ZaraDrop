@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext"
+  },
+  "include": ["../../env.d.ts", "src/**/*.d.ts", "src/**/*.ts", "src/**/*.js"]
+}

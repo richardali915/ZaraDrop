@@ -2,11 +2,15 @@
 
 <style>
   .card {
-    border-radius: 24px;
-    background: rgba(255,255,255,.05);
-    border: 1px solid rgba(255,255,255,.08);
-    box-shadow: 0 40px 120px rgba(0,0,0,.12);
-    padding: 1.5rem;
-    backdrop-filter: blur(24px);
+    border-radius: 26px;
+    background: var(--zd-card);
+    border: 1px solid var(--zd-border);
+    box-shadow: var(--zd-shadow-lg);
+    padding: 1.6rem;
+    backdrop-filter: blur(28px);
+    transition: transform 0.18s ease, border-color 0.25s ease, background 0.25s ease;
+  }
+  .card:hover {
+    transform: translateY(-1px);
   }
 </style>

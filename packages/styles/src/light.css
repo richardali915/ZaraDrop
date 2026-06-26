@@ -1,0 +1,37 @@
+:root[data-zd-theme="light"] {
+  --zd-bg: #f5f4fa;
+  --zd-bg-elevated: #ffffff;
+  --zd-surface: rgba(20, 18, 40, .04);
+  --zd-surface-hover: rgba(20, 18, 40, .08);
+  --zd-surface-soft: rgba(20, 18, 40, .02);
+  --zd-surface-1: #ffffff;
+  --zd-border: rgba(20, 18, 40, .10);
+  --zd-border-strong: rgba(20, 18, 40, .18);
+  --zd-text: #141226;
+  --zd-text-dim: rgba(20, 18, 38, .58);
+  --zd-text-faint: rgba(20, 18, 38, .38);
+  --zd-accent: #9b2bc4;
+  --zd-accent-2: #7a22a8;
+  --zd-accent-soft: rgba(155, 43, 196, .12);
+  --zd-success: #0e9c61;
+  --zd-success-soft: rgba(14, 156, 97, .12);
+  --zd-warning: #b8740a;
+  --zd-warning-soft: rgba(184, 116, 10, .12);
+  --zd-danger: #db2e45;
+  --zd-danger-soft: rgba(219, 46, 69, .12);
+  --zd-glow: rgba(155, 43, 196, .16);
+  --zd-card: #ffffff;
+  --zd-card-soft: rgba(20, 18, 40, .04);
+  --zd-button-primary: linear-gradient(135deg, #9b2bc4 0%, #7a22a8 100%);
+  --zd-button-primary-text: #ffffff;
+  --zd-button-secondary: rgba(20, 18, 40, .06);
+  --zd-button-danger: rgba(219, 46, 69, .16);
+  --zd-input: #ffffff;
+  --zd-input-border: rgba(20, 18, 40, .10);
+  --zd-input-focus: rgba(155, 43, 196, .12);
+  --zd-shadow: 0 22px 60px rgba(34, 22, 80, .08);
+  --zd-shadow-lg: 0 32px 90px rgba(34, 22, 80, .12);
+  --zd-overlay: rgba(255, 255, 255, .96);
+  --zd-scrollbar: rgba(20, 18, 40, .16);
+  color-scheme: light;
+}

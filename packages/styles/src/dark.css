@@ -1,0 +1,37 @@
+:root[data-zd-theme="dark"] {
+  --zd-bg: #07060c;
+  --zd-bg-elevated: #0c0b16;
+  --zd-surface: rgba(255, 255, 255, .05);
+  --zd-surface-hover: rgba(255, 255, 255, .08);
+  --zd-surface-soft: rgba(255, 255, 255, .03);
+  --zd-surface-1: #100f1d;
+  --zd-border: rgba(255, 255, 255, .09);
+  --zd-border-strong: rgba(255, 255, 255, .16);
+  --zd-text: #f4f2fb;
+  --zd-text-dim: rgba(244, 242, 251, .54);
+  --zd-text-faint: rgba(244, 242, 251, .32);
+  --zd-accent: #c13fe0;
+  --zd-accent-2: #8b30c9;
+  --zd-accent-soft: rgba(193, 63, 224, .16);
+  --zd-success: #1fd67a;
+  --zd-success-soft: rgba(31, 214, 122, .14);
+  --zd-warning: #f5a623;
+  --zd-warning-soft: rgba(245, 166, 35, .16);
+  --zd-danger: #ff4d5e;
+  --zd-danger-soft: rgba(255, 77, 94, .16);
+  --zd-glow: rgba(193, 63, 224, .38);
+  --zd-card: rgba(255, 255, 255, .07);
+  --zd-card-soft: rgba(255, 255, 255, .12);
+  --zd-button-primary: linear-gradient(135deg, #d24fe3 0%, #c13fe0 60%, #8b30c9 100%);
+  --zd-button-primary-text: #ffffff;
+  --zd-button-secondary: rgba(255, 255, 255, .08);
+  --zd-button-danger: rgba(255, 77, 94, .18);
+  --zd-input: rgba(255, 255, 255, .06);
+  --zd-input-border: rgba(255, 255, 255, .16);
+  --zd-input-focus: rgba(193, 63, 224, .24);
+  --zd-shadow: 0 24px 80px rgba(0, 0, 0, .24);
+  --zd-shadow-lg: 0 30px 100px rgba(0, 0, 0, .35);
+  --zd-overlay: rgba(0, 0, 0, .88);
+  --zd-scrollbar: rgba(255, 255, 255, .14);
+  color-scheme: dark;
+}

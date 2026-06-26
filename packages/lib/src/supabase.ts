@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import type { OrderItem } from '@zaradrop/types';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -56,6 +57,7 @@ export async function createOrder(payload: {
   payment_method: string;
   destination: string;
   status?: string;
+  items?: OrderItem[];
 }) {
   const { data, error } = await supabase
     .from('orders')
@@ -70,7 +72,7 @@ export async function createOrder(payload: {
 export async function fetchMerchantRequests(storeId: string) {
   const { data, error } = await supabase
     .from('orders')
-    .select('id, order_code, status, total, customer_id, created_at')
+    .select('id, order_code, status, total, payment_method, customer_id, created_at')
     .eq('store_id', storeId)
     .order('created_at', { ascending: false });
 
@@ -81,7 +83,7 @@ export async function fetchMerchantRequests(storeId: string) {
 export async function fetchOpenRiderJobs() {
   const { data, error } = await supabase
     .from('orders')
-    .select('id, order_code, status, total, customer_id, store_id, eta, created_at')
+    .select('id, order_code, status, total, payment_method, customer_id, store_id, eta, destination, created_at')
     .in('status', ['ready', 'pending', 'accepted'])
     .order('created_at', { ascending: true });
 

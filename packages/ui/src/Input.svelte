@@ -16,21 +16,26 @@
   .field {
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
-    font-size: 0.9rem;
-    color: white;
+    gap: 0.55rem;
+    font-size: 0.95rem;
+    color: var(--zd-text);
+  }
+  span {
+    color: var(--zd-text-dim);
+    font-size: 0.85rem;
   }
   input {
     width: 100%;
+    border-radius: 18px;
+    border: 1px solid var(--zd-input-border);
+    background: var(--zd-input);
+    color: var(--zd-text);
     padding: 1rem 1.1rem;
-    border-radius: 16px;
-    border: 1px solid rgba(255,255,255,.12);
-    background: rgba(255,255,255,.06);
-    color: white;
     outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   }
   input:focus {
-    border-color: rgba(193,68,212,.75);
-    box-shadow: 0 0 0 3px rgba(193,68,212,.1);
+    border-color: var(--zd-input-focus);
+    box-shadow: 0 0 0 3px var(--zd-input-focus);
   }
 </style>

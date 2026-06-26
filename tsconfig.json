@@ -7,7 +7,6 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "allowImportingTsExtensions": true,
     "baseUrl": ".",
     "paths": {
       "@zaradrop/*": ["packages/*/src"],
@@ -16,12 +15,22 @@
       "@zaradrop/rider-app": ["apps/rider-app/src"],
       "@zaradrop/admin-app": ["apps/admin-app/src"]
     },
-    "types": ["node", "svelte"]
+    "types": ["node", "svelte"],
+    "ignoreDeprecations": "5.0"
   },
   "include": [
     "env.d.ts",
     "apps/**/*",
-    "packages/**/*",
-    "supabase/**/*"
+    "packages/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "apps/**/.svelte-kit",
+    "apps/**/.svelte-kit/**",
+    "apps/*/src",
+    "apps/*/node_modules",
+    "packages/*/src",
+    "packages/*/node_modules",
+    "supabase/node_modules"
   ]
 }

@@ -26,3 +26,8 @@ npm run dev:admin
 Notes
 - `packages/lib` re-exports the Supabase client; apps should import from `@zaradrop/lib`.
 - Environment variables: set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (or legacy `REACT_APP_` vars) per app.
+
+Enterprise upgrade
+- A strong enterprise architecture doc has been added at `docs/ENTERPRISE_ARCHITECTURE.md`.
+- A complete core schema foundation is available at `supabase/schema.sql`.
+- The repo is now positioned to evolve into dispatch, support, finance, and operations center apps.

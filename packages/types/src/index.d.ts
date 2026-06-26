@@ -25,6 +25,34 @@ export interface Order {
   items?: OrderItem[];
 }
 
+export interface LocationPoint {
+  id?: string;
+  lat: number;
+  lng: number;
+  label?: string;
+  description?: string;
+}
+
+export interface RouteSummary {
+  distanceMeters: number;
+  durationSeconds: number;
+  etaText: string;
+  routeSummary: string;
+}
+
+export interface DispatchCandidate {
+  rider_id: string;
+  location: LocationPoint;
+  availabilityScore: number;
+  currentDistanceMeters: number;
+}
+
+export interface DispatchScore {
+  rider_id: string;
+  score: number;
+  estimatedMinutes: number;
+}
+
 export interface ApprovalItem {
   id: string;
   type: 'merchant' | 'rider' | 'order';

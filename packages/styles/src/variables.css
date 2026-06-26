@@ -1,15 +1,16 @@
 :root {
-  --zd-bg: #0a0018;
-  --zd-surface: rgba(255,255,255,.06);
-  --zd-surface-strong: rgba(255,255,255,.12);
-  --zd-border: rgba(255,255,255,.08);
-  --zd-text: #f7f7fb;
-  --zd-muted: rgba(255,255,255,.65);
-  --zd-accent: #c144d4;
-  --zd-accent-2: #ff6b35;
-  --zd-success: #22d47c;
-  --zd-warning: #f59e0b;
-  --zd-danger: #ff4d6d;
-  --zd-radius: 18px;
-  --zd-shadow: 0 24px 80px rgba(0,0,0,0.16);
+  --zd-radius: 20px;
+  --zd-space-xs: 0.35rem;
+  --zd-space-sm: 0.75rem;
+  --zd-space-md: 1.25rem;
+  --zd-space-lg: 1.75rem;
+  --zd-space-xl: 2.5rem;
+  --zd-transition-fast: 0.18s ease;
+  --zd-transition-medium: 0.25s ease;
+  --zd-transition-smooth: 0.35s ease;
+  --zd-border-radius: 22px;
+  --zd-border-radius-sm: 14px;
+  --zd-shadow: 0 22px 72px rgba(0, 0, 0, 0.12);
+  --zd-shadow-lg: 0 24px 90px rgba(0, 0, 0, 0.16);
+  --zd-focus-ring: 0 0 0 3px rgba(155, 43, 196, 0.16);
 }

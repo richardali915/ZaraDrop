@@ -1,8 +1,12 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { signOut, requireAuth, orders, orderLoading, loadCustomerOrders, placeCustomerOrder, cancelCustomerOrder } from '@zaradrop/hooks';
+  import { signOut, requireAuth, orders, orderLoading, loadCustomerOrders, placeCustomerOrder, cancelCustomerOrder, buildRouteMap, routeSummary, routeLoading, routeError } from '@zaradrop/hooks';
   import { goto } from '$app/navigation';
   import { get } from 'svelte/store';
+  import MapPanel from '@zaradrop/ui/MapPanel.svelte';
+
+  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  const DEFAULT_ORIGIN = 'Wuse II Market, Abuja, Nigeria';
 
   let loaded = false;
   let currentUser = null;
@@ -12,6 +16,7 @@
   let items = 'Fresh groceries and essentials';
   let creating = false;
   let actionError = '';
+  let mapContainer: HTMLDivElement | null = null;
 
   onMount(async () => {
     const active = await requireAuth();
@@ -22,7 +27,25 @@
     currentUser = active;
     await loadCustomerOrders();
     loaded = true;
+    await refreshRoute();
   });
+
+  async function refreshRoute() {
+    if (!mapContainer || !GOOGLE_MAPS_API_KEY || !destination) {
+      return;
+    }
+
+    try {
+      await buildRouteMap({
+        apiKey: GOOGLE_MAPS_API_KEY,
+        mapElement: mapContainer,
+        origin: DEFAULT_ORIGIN,
+        destination,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   async function handleSignOut() {
     await signOut();
@@ -43,6 +66,7 @@
           { name: items, quantity: 1, price: total, subtotal: total }
         ]
       });
+      await refreshRoute();
     } catch (err) {
       actionError = err?.message ?? 'Unable to place order.';
     } finally {
@@ -133,7 +157,7 @@
         <form on:submit|preventDefault={submitOrder} class="order-form">
           <label>
             Destination
-            <input type="text" bind:value={destination} placeholder="Delivery address" required />
+            <input type="text" bind:value={destination} placeholder="Delivery address" required on:blur={refreshRoute} />
           </label>
           <label>
             Order details
@@ -153,6 +177,27 @@
           </label>
           <button class="primary" type="submit" disabled={creating}>{creating ? 'Placing order…' : 'Place order'}</button>
         </form>
+
+        <div class="route-preview">
+          <MapPanel title="Route preview" description="See route distance, duration and live map before checkout.">
+            <div bind:this={mapContainer} class="route-map"></div>
+          </MapPanel>
+
+          {#if $routeLoading}
+            <div class="route-status">Loading live route…</div>
+          {/if}
+
+          {#if $routeError}
+            <div class="route-error">{$routeError}</div>
+          {/if}
+
+          {#if $routeSummary}
+            <div class="route-summary">
+              <strong>{ $routeSummary.routeSummary }</strong>
+              <p>ETA: { $routeSummary.etaText }</p>
+            </div>
+          {/if}
+        </div>
       </div>
     </div>
   {/if}
@@ -258,6 +303,35 @@
   .order-form {
     display: grid;
     gap: 1rem;
+  }
+
+  .route-preview {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .route-map {
+    min-height: 320px;
+    width: 100%;
+  }
+
+  .route-status,
+  .route-error,
+  .route-summary {
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 1rem;
+  }
+
+  .route-error {
+    color: #fda4af;
+  }
+
+  .route-summary p {
+    margin: 0.65rem 0 0;
+    color: rgba(255,255,255,0.78);
   }
 
   label {

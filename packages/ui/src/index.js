@@ -3,3 +3,5 @@ export { default as Card } from './Card.svelte';
 export { default as Badge } from './Badge.svelte';
 export { default as Input } from './Input.svelte';
 export { default as Modal } from './Modal.svelte';
+export { default as ThemeToggle } from './ThemeToggle.svelte';
+export { default as MapPanel } from './MapPanel.svelte';
